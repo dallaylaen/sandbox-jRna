@@ -10,7 +10,7 @@ global.document = mock.defaultView;
 global.window = mock;
 var jQuery = require('jquery');
 
-var jRna = require( '../js/jRna.js' );
+var jRna = require( '../lib/jRna.js' );
 
 function html (text) {
     var root = jQuery("body");
