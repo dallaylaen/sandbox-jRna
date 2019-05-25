@@ -1,0 +1,43 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Dismissable message - jRna examples</title>
+    <script lang="javascript" src="3rd-party/jquery.js"></script>
+    <script lang="javascript" src="../lib/jRna.js"></script>
+    <script lang="javascript" id="description">
+        var desc = {"title":"Dismissable message - jRna examples"}
+    </script>
+</head>
+<body>
+    <h1>Dismissable message - jRna examples</h1>
+
+    <!-- initial node to attach to -->
+    <div id="root">
+        <div id="where-message-appears"></div>
+    </div>
+
+    <!-- the script is here -->
+    <script lang="javascript" id="main">
+        "use strict";
+    // create jRna description
+    var message = new jRna();
+
+    // create an output method say()
+    // associated with element that has id="content"
+    message.output( "content", "say" );
+
+    // create an input associated with callback
+    message.click( "dismiss", function () { this.remove() } );
+
+    // create an in-memory template
+    message.html('<span id="content"></span><a href="#" id="dismiss">[x]</a>');
+
+    // now attach to some HTML element
+    message.spawn().append_to($("#where-message-appears")).say("Hello!");
+    </script>
+
+    <!-- describe how to use the page, if needed -->
+    <div id="usage">
+    </div>
+</body>
+</html>
