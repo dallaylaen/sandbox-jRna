@@ -1,0 +1,72 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Nested boxes - jRna examples</title>
+    <script lang="javascript" src="3rd-party/jquery.js"></script>
+    <script lang="javascript" src="../lib/jRna.js"></script>
+    <script lang="javascript" id="description">var desc = {"title":"Nested boxes - jRna examples"}</script>
+</head>
+<body>
+    <h1>Nested boxes - jRna examples</h1>
+
+    <!-- initial node to attach to -->
+    <div id="root">
+    </div>
+
+    <!-- invisible widget sources -->
+    <div id="library" style="display: none">
+        <div id="editor">
+            <input id="value">
+            <input type="submit" id="save" value="save">
+            <input type="submit" id="cancel" value="cancel">
+        </div>
+
+        <div id="box">
+            <div>
+                <span id="title"></span>
+                <a href="#" id="remove">[x]</a>
+            </div>
+            <div style="padding-left: 3%">
+                <div id="content"></div>
+                <div><a href="#" id="create">create new node</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- the script is here -->
+    <script lang="javascript" id="main">
+        "use strict";
+        var editor = new jRna().args("callback");
+        editor.html_from("library", "editor");
+        editor.input("value");
+        editor.click("save", function() {
+            this.callback( this.value() );
+            this.remove();
+        });
+        editor.click("cancel", function() {
+            this.remove();
+        });
+
+        var box = new jRna();
+        box.html_from("library", "box");
+        box.element("content");
+        box.output("title");
+        box.click("remove", function() { this.remove() } );
+        box.sticky_click("create", "editor_active", function() {
+            var me = this;
+            var ed = editor.spawn();
+            ed.callback = function(str) {
+                box.spawn().append_to( me.content ).title(str);
+            };
+            ed.on_remove( function() { me.editor_active = false } );
+            ed.append_to( this.content );
+        });
+
+        var initial = box.spawn().append_to( $('#root') ).title("root node");
+    </script>
+
+    <!-- describe how to use the page, if needed -->
+    <div id="usage">
+    </div>
+</body>
+</html>
