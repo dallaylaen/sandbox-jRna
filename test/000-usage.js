@@ -87,5 +87,17 @@ describe( "jRna", () => {
 
         done();
     });
+
+    it("can read html from the document itself", (done) => {
+        var root = html('<div id="main"></div><div id="widget"><span id="label"></span></div>');
+        var rna  = new jRna().output("label").html_from("widget");
+
+        var probe = rna.spawn().append_to(root.find("#main"));
+        probe.label("foo bared");
+
+        console.log(root.html());
+
+        done();
+    });
 });
 
