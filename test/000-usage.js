@@ -64,6 +64,27 @@ describe( "jRna", () => {
         enzyme.display("<i>");
         jQuery("#display").html().should.equal("&lt;i&gt;");
 
+        enzyme.element("display").should.be.an.instanceof(jQuery);
+        should.not.exist(enzyme.element("noexist"));
+
+        enzyme.remove();
+        jQuery("body").html().should.equal('');
+
+        done();
+    });
+
+    it("can process events", (done) => {
+        var root = html('<div><button type="button" id="in">Click me!</div>');
+        var rna = new jRna().init("trace", function() { return 0 } );
+        rna.click("in", function() { this.trace++ });
+
+        var probe = rna.attach(root);
+
+        jQuery("#in").click();
+        probe.trace.should.equal(1);
+        jQuery("#in").click();
+        probe.trace.should.equal(2);
+
         done();
     });
 });
