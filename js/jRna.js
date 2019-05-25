@@ -281,16 +281,16 @@ function jRna () {
     this.post_setup = function(inst, container) {
         for (var i in this._setup) {
             var action = this._setup[i];
-            var all = container.find( action[0] );
-
-        console.log(all);
-            
+            var all = container.find( "#"+action[0] );
             if (all.length == 0)
                 throw "No element '#"+action[0]+"' for jRna '"+inst.id+"' in container "+container;
-            action[1](inst, all.first);
-            inst._element[action[0]] = all.first;
+            action[1](inst, all.first());
+            inst._element[action[0]] = all.first();
         };
     };
 };
 
-module.exports = jRna;
+if (typeof module === 'object' && typeof module.exports === 'object' ) {
+    // we're being exported
+    module.exports = jRna;
+};

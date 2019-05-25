@@ -19,14 +19,23 @@ var jRna = require( '../js/jRna.js' );
 console.log(jRna);
 
 describe( "jRna", () => {
-    it( "spawns instances", (done) => {
+    it( "spawns instances w/o elements", (done) => {
         var rna = new jRna().def("foo", 42);
         var enzyme = rna.attach(root);
 
         enzyme.should.have.property("foo", 42);
 
-        console.log(enzyme.myid);
-        
+        done();
+    });
+
+    it( "spawns instances with elements", (done) => {
+        var rna = new jRna().element("myid");
+        var enzyme = rna.attach(root);
+
+        enzyme.should.have.property("myid");
+        enzyme.myid.should.be.an.instanceof(jQuery);
+        enzyme.myid.html().should.be.equal("some text");
+
         done();
     });
 });
