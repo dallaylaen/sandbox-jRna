@@ -1,0 +1,12 @@
+#!/bin/sh
+
+die () {
+    echo >&2 "$@"
+    exit 1
+}
+assert () {
+    echo "# Executing $*"
+    "$@" || die "# Command failed"
+}
+
+assert nyc mocha
