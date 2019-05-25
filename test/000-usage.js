@@ -9,6 +9,7 @@ var mock = (new JSDOM('<html><body></body></html>')).window;
 global.document = mock.defaultView;
 global.window = mock;
 var jQuery = require('jquery');
+global.$ = jQuery;
 
 var jRna = require( '../lib/jRna.js' );
 
@@ -35,6 +36,33 @@ describe( "jRna", () => {
         enzyme.should.have.property("myid");
         enzyme.myid.should.be.an.instanceof(jQuery);
         enzyme.myid.html().should.be.equal("some text");
+
+        done();
+    });
+
+    it( "can modify document", (done) => {
+        html(''); // reset document
+        var rna = new jRna().html('<span id="display"></span>');
+        rna.output("display").args("initial");
+        rna.def( "reset", function() {
+            this.display( this.initial );
+        });
+        rna.on_attach(function() {
+            this.reset();
+        });
+        var enzyme = rna.spawn( { initial: 42 } ).append_to(html());
+
+        // now real test be here
+        jQuery("#display").html().should.equal("42");
+
+        enzyme.display(137);
+        jQuery("#display").html().should.equal("137");
+
+        enzyme.reset();
+        jQuery("#display").html().should.equal("42");
+
+        enzyme.display("<i>");
+        jQuery("#display").html().should.equal("&lt;i&gt;");
 
         done();
     });
