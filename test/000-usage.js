@@ -21,10 +21,11 @@ function html (text) {
 
 describe( "jRna", () => {
     it( "spawns instances w/o elements", (done) => {
-        var rna = new jRna().def("foo", 42);
-        var enzyme = rna.attach(html());
+        var rna = new jRna().def("foo", 42).args("bar");
+        var enzyme = rna.attach(html(), { bar : 137 });
 
         enzyme.should.have.property("foo", 42);
+        enzyme.should.have.property("bar", 137);
 
         done();
     });
