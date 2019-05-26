@@ -14,23 +14,27 @@
         <table border="1">
             <tr>
                 <th><a href="#asc" id="asc">^</a> Name <a href="#desc" id="desc">v</a></th>
+                <th><a href="#asc" id="asc">^</a> Country <a href="#desc" id="desc">v</a></th>
                 <th><a href="#asc" id="asc">^</a> Year <a href="#desc" id="desc">v</a></th>
-                <th><a href="#asc" id="asc">^</a> Cost <a href="#desc" id="desc">v</a></th>
+                <th><a href="#asc" id="asc">^</a> INES rating <a href="#desc" id="desc">v</a></th>
             </tr>
             <tr>
-                <td>Foobar</td>
-                <td>1963</td>
-                <td>1000000</td>
+                <td>Three Mile Island</td>
+                <td>USA</td>
+                <td>1979</td>
+                <td>5</td>
             </tr>
             <tr>
-                <td>Melchior</td>
-                <td>1981</td>
-                <td>100000</td>
+                <td>Chernobyl</td>
+                <td>USSR</td>
+                <td>1986</td>
+                <td>7</td>
             </tr>
             <tr>
-                <td>Ashmodel</td>
-                <td>2013</td>
-                <td>10000</td>
+                <td>Fukushima Daiichi</td>
+                <td>Japan</td>
+                <td>2011</td>
+                <td>7</td>
             </tr>
 
         </table>
@@ -57,9 +61,6 @@
         column.click( "desc", function() {
             this.host.sort( this.index, true );
         });
-        column.on_attach(function() {
-            console.log("attached column "+this.index+" to", this.host);
-        });
 
         function cmp_by (extract) {
             return function( areal, breal ) {
@@ -82,7 +83,6 @@
                 if (!n) {
                     // first row is special
                     $(item).find("th").each((i, item) => {
-                        console.log("found th ",i);
                         me.columns.push(column.attach($(item), { index: i, host: me }));
                     });
                 } else {
