@@ -12,7 +12,7 @@
     <!-- initial node to attach to -->
     <div id="root">
         <div id="display">
-            Nodes created: <span id="iter">0</span>
+            Nodes created: <span id="iter">0</span> at <span id="speed">n/a</span> nodes/sec
             <button id="start">start</button>
             <button id="stop">stop it</button>
             <button id="cut">remove nodes</button>
@@ -27,15 +27,22 @@
         let stop = false;
 
         let epoch = new Date().getTime();
+        function elapsed(start) {
+            if (!start)
+                start = 0;
+            return (new Date().getTime() - start)/1000;
+        };
 
         const display = new jRna()
             .output("iter")
+            .output("speed")
             .element("tree")
             .def( "cut", function () {
                 this.tree.html('');
             })
             .def("update", function () {
                 this.iter( this.iter() + 1 );
+                this.speed( (this.iter() / elapsed(epoch)).toFixed(2));
             })
             .click("stop", function () {
                 stop = true;
@@ -53,7 +60,7 @@
             .output("label")
             .element("children");
         tree.on_attach( function() {
-            this.label((new Date().getTime()-epoch) / 1000.0);
+            this.label(elapsed(epoch));
             display.update();
             let me = this;
             setTimeout( function() {
