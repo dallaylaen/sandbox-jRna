@@ -61,7 +61,6 @@
             .element("children");
         tree.on_attach( function() {
             this.label(elapsed(epoch));
-            display.update();
             let me = this;
             setTimeout( function() {
                 if (stop) return;
@@ -69,6 +68,7 @@
                     tree.spawn().append_to( me.children );
                 };
             }, 0);
+            display.update();
         });
 
         function start(timeout) {
