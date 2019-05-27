@@ -1,0 +1,84 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Speed &amp; memory use benchmark - jRna examples</title>
+    <script lang="javascript" src="3rd-party/jquery.js"></script>
+    <script lang="javascript" src="../lib/jRna.js"></script>
+    <script lang="javascript" id="description">var desc = {"title":"Speed & memory use benchmark - jRna examples"}</script>
+</head>
+<body>
+    <h1>Speed &amp; memory use benchmark - jRna examples</h1>
+
+    <!-- initial node to attach to -->
+    <div id="root">
+        <div id="display">
+            Nodes created: <span id="iter">0</span>
+            <button id="start">start</button>
+            <button id="stop">stop it</button>
+            <button id="cut">remove nodes</button>
+        </div>
+        <div id="tree">
+        </div>
+    </div>
+
+    <!-- the script is here -->
+    <script lang="javascript" id="main">
+        "use strict";
+        let stop = false;
+
+        let epoch = new Date().getTime();
+
+        const display = new jRna()
+            .output("iter")
+            .element("tree")
+            .def( "cut", function () {
+                this.tree.html('');
+            })
+            .def("update", function () {
+                this.iter( this.iter() + 1 );
+            })
+            .click("stop", function () {
+                stop = true;
+            })
+            .click("start", function () {
+                start(1000);
+            })
+            .click("cut", function() {
+                this.cut()
+            })
+            .attach($('#root'));
+
+        const tree = new jRna()
+            .html('<span id="label"></span><div id="children" style="padding-left: 1%"></div>')
+            .output("label")
+            .element("children");
+        tree.on_attach( function() {
+            this.label((new Date().getTime()-epoch) / 1000.0);
+            display.update();
+            let me = this;
+            setTimeout( function() {
+                if (stop) return;
+                for( let i = 0; i<2; i++ ) {
+                    tree.spawn().append_to( me.children );
+                };
+            }, 0);
+        });
+
+        function start(timeout) {
+            stop = false;
+            epoch = new Date().getTime();
+            display.iter(0);
+            display.cut();
+            setTimeout( () => {
+                stop = true;
+            }, timeout);
+            tree.spawn().append_to(display.tree);
+        };
+
+    </script>
+
+    <!-- describe how to use the page, if needed -->
+    <div id="usage">
+    </div>
+</body>
+</html>
