@@ -1,5 +1,7 @@
 "use strict";
-var should = require('chai').should();
+const chai = require('chai');
+const should = chai.should();
+const expect = chai.expect;
 
 const { JSDOM } = require('jsdom');
 // jsdom documentation suggests loading scrips by hand via `eval`
@@ -96,7 +98,32 @@ describe( "jRna", () => {
         var probe = rna.spawn().append_to(root.find("#main"));
         probe.label("foo bared");
 
-        console.log(root.html());
+        root.html().should.match(/<span id="label">foo bared<\/span>/);
+
+        done();
+    });
+
+    it ("attaches to one and only one element", (done) => {
+        const root = html('<div id="main"></div><div id="main"><span id="my"></span></div>');
+        const rna  = new jRna().output("my").html('<span id="my"></span>');
+
+        expect( () => {
+            rna.attach( root.find("#nothing") );
+        }).to.throw("Cannot attach to a missing element");
+
+        expect( () => {
+            rna.attach( root.find( "#main" ) );
+        }).to.throw(/No element .*#my.*jRna/);
+
+        expect( () => {
+            rna.spawn().append_to( root.find("#nothing") );
+        }).to.throw("Cannot append to a missing element");
+
+        const box = rna.spawn().append_to( root.find( "#main" ) );
+        box.my("ready");
+        root.html().should.match(/div.*span.*ready.*span.*div.*div.*div/);
+        root.html().should.not.match(/div.*div.*div.*span.*ready.*span.*div/);
+
 
         done();
     });
