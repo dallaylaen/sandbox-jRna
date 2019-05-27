@@ -24,7 +24,7 @@
     <!-- the script is here -->
     <script lang="javascript" id="main">
         "use strict";
-        let stop = false;
+        let stop = true;
 
         let epoch = new Date().getTime();
         function elapsed(start) {
@@ -51,7 +51,8 @@
                 start(1000);
             })
             .click("cut", function() {
-                this.cut()
+                stop = true;
+                this.cut();
             })
             .attach($('#root'));
 
@@ -64,7 +65,7 @@
             let me = this;
             setTimeout( function() {
                 if (stop) return;
-                for( let i = 0; i<2; i++ ) {
+                for( let i = 0; i<5; i++ ) {
                     tree.spawn().append_to( me.children );
                 };
             }, 0);
