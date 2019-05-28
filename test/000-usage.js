@@ -23,6 +23,13 @@ function html (text) {
 };
 
 describe( "jRna", () => {
+    it("knows where it comes from", (done) => {
+        const rna = new jRna();
+        rna.origin.should.match(/usage.js:\d+(?::\d+)?$/);
+
+        done();
+    });
+
     it( "spawns instances w/o elements", (done) => {
         var rna = new jRna().def("foo", 42).args("bar");
         var enzyme = rna.attach(html(), { bar : 137 });
@@ -110,7 +117,7 @@ describe( "jRna", () => {
 
         expect( () => {
             rna.attach( root.find("#nothing") );
-        }).to.throw("Cannot attach to a missing element");
+        }).to.throw(/Cannot attach to a missing element.*jRna@.*usage.js:\d+/);
 
         expect( () => {
             rna.attach( root.find( "#main" ) );
@@ -125,6 +132,32 @@ describe( "jRna", () => {
         root.html().should.match(/div.*span.*ready.*span.*div.*div.*div/);
         root.html().should.not.match(/div.*div.*div.*span.*ready.*span.*div/);
 
+
+        done();
+    });
+
+    it("provides toggle functionality", (done) => {
+        const root = html('<button id="switch">click me</button>');
+        let on = 0, off = 0;
+
+        const box = new jRna()
+            .output( "switch", "label" )
+            .toggle( "switch", 
+                function () { this.label("turn off"); on++ }, 
+                function () { this.label("turn on"); off++ } 
+        ).attach(root);
+
+        const button = root.find('#switch');
+
+        button.click();
+        on.should.equal(1);
+        off.should.equal(0);
+        button.html().should.equal("turn off");
+        
+        button.click();
+        on.should.equal(1);
+        off.should.equal(1);
+        button.html().should.equal("turn on");
 
         done();
     });
