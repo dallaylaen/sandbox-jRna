@@ -162,6 +162,62 @@ describe( "jRna", () => {
         done();
     });
 
+    it("provides sticky_click functionality", (done) => {
+        let trace = 0;
+
+        const root = html('<button id="sticky">click me</button>');
+        const rna  = new jRna()
+            .sticky_click("sticky", "down", function () {
+                this.element("sticky").html("clicked");
+                trace++;
+            })
+            .attach(root);
+
+        const button = root.find("button");
+        trace.should.equal(0);
+        button.html().should.equal("click me");
+
+        button.click();
+        trace.should.equal(1);
+        button.html().should.equal("clicked");
+        button.click();
+        trace.should.equal(1);
+        rna.down = false;
+        button.click();
+        trace.should.equal(2);
+
+        done();
+    });
+
+    it( "provides on_remove and on_attach callbacks", () => {
+        const root = html('');
+
+        let attach = 0;
+        let remove = 0;
+
+        const rna = new jRna()
+            .on_attach(function () { attach++ })
+            .on_remove(function () { remove++ })
+            .html('<span>plain text</span>');
+
+        // nothing happened yet
+        root.html().should.equal('');
+        attach.should.equal(0);
+        remove.should.equal(0);
+
+        const enzyme = rna.spawn().append_to(root);
+        root.html().should.match(/<span>plain text<\/span>/);
+        attach.should.equal(1);
+        remove.should.equal(0);
+
+        enzyme.remove();
+        root.html().should.equal('');
+        attach.should.equal(1);
+        remove.should.equal(1);
+    });
+
+    /* additional stuff */
+
     const server = MockXMLHttpRequest.newServer({
         post: ['/my/url', {
             // status: 200 is the default
