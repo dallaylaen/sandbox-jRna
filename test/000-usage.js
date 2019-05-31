@@ -197,7 +197,6 @@ describe( "jRna", () => {
 
         const rna = new jRna()
             .on_attach(function () { attach++ })
-            .on_remove(function () { remove++ })
             .html('<span>plain text</span>');
 
         // nothing happened yet
@@ -205,7 +204,9 @@ describe( "jRna", () => {
         attach.should.equal(0);
         remove.should.equal(0);
 
-        const enzyme = rna.spawn().append_to(root);
+        const enzyme = rna.spawn()
+            .append_to(root)
+            .on_remove(function () { remove++ });
         root.html().should.match(/<span>plain text<\/span>/);
         attach.should.equal(1);
         remove.should.equal(0);
