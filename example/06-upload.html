@@ -1,0 +1,39 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>File upload - jRna examples</title>
+    <script lang="javascript" src="3rd-party/jquery.js"></script>
+    <script lang="javascript" src="../lib/jRna.js"></script>
+    <script lang="javascript" id="description">var descr = {"title":"File upload - jRna examples"}</script>
+</head>
+<body>
+    <h1>File upload - jRna examples</h1>
+
+    <!-- initial node to attach to -->
+    <div id="root">
+        <div id="ready"></div>
+        <input type="file" id="file">
+        <pre id="display"></pre>
+    </div>
+
+    <!-- the script is here -->
+    <script lang="javascript" id="main">
+        "use strict";
+
+        const rna = new jRna()
+            .output("ready")
+            .on_attach(function() { this.ready("ready..."); })
+            .output("display")
+            .upload("file")
+            .on( "file", "change", function() {
+                const me = this;
+                this.file().then( function(str) { me.display(str) });
+            })
+            .attach($('#root'));
+    </script>
+
+    <!-- describe how to use the page, if needed -->
+    <div id="usage">
+    </div>
+</body>
+</html>
