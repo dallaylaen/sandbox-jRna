@@ -13,21 +13,42 @@
     <div id="root">
         <div id="ready"></div>
         <input type="file" id="file">
+        <div id="info"></div>
         <pre id="display"></pre>
+    </div>
+
+    <div id="library" style="display: none">
+        <div id="meta">
+        <div>
+            <span id="key"></span>: <span id="value"></span>
+        </div>
+        </div>
     </div>
 
     <!-- the script is here -->
     <script lang="javascript" id="main">
         "use strict";
 
+        const meta = new jRna()
+            .html_from("library", "meta")
+            .output("key")
+            .output("value");
+
         const rna = new jRna()
             .output("ready")
-            .on_attach(function() { this.ready("ready..."); })
             .output("display")
+            .element("info")
             .upload("file")
             .on( "file", "change", function() {
                 const me = this;
-                this.file().then( function(str) { me.display(str) });
+                this.file( function(ret) {
+                    me.info.html('');
+                    meta.append_to(me.info) .key("name") .value(ret.name);
+                    meta.append_to(me.info) .key("size") .value(ret.size);
+                    meta.append_to(me.info) .key("type") .value(ret.type);
+                    meta.append_to(me.info) .key("last modified") .value(new Date(ret.lastModified));
+                    me.display(ret.content);
+                });
             })
             .attach($('#root'));
     </script>
