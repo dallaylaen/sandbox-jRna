@@ -9,30 +9,16 @@ in Perl microframework called Neaf and jRna.
 
 use strict;
 use warnings;
-use MVC::Neaf;
+use MVC::Neaf 0.27;
 use JSON::MaybeXS;
 use FindBin qw($Bin);
 
 my $codec = JSON::MaybeXS->new->utf8;
 
-neaf helper => 'json_form' => sub {
-    my $req = shift;
-
-    if (($req->header_in("Content-Type") || '') ne 'application/json') {
-        die 400;
-    };
-
-    my $content = eval {
-        $codec->decode( $req->body );
-    };
-    die 400 unless defined $content;
-    # Bad - we're swallowing error here
-
-    return $content;
-};
-
 neaf static => '/js' => "$Bin/../lib";
 neaf static => '/js/3rd-party' => "$Bin/../example/3rd-party";
+
+neaf view => 'TT', 'TT';
 
 get '/' => sub {
     return {
@@ -47,10 +33,10 @@ post '/api/Echo' => sub {
 
     sleep 1;
 
-    return $req->json_form;
+    return $req->body_json;
 };
 
-neaf->load_resources(\*DATA)->run;
+neaf->run;
 
 __DATA__
 
