@@ -4,23 +4,9 @@ const should = chai.should();
 const expect = chai.expect;
 const MockXMLHttpRequest = require('mock-xmlhttprequest');
 
-const { JSDOM } = require('jsdom');
-// jsdom documentation suggests loading scrips by hand via `eval`
-// https://github.com/jsdom/jsdom/wiki/Don't-stuff-jsdom-globals-onto-the-Node-global
-// but screw that for now...
-var mock = (new JSDOM('<html><body></body></html>')).window;
-global.document = mock.defaultView;
-global.window = mock;
-var jQuery = require('jquery');
-global.$ = jQuery;
+const html = require( '../lib/test-mock-html.js' );
 
-var jRna = require( '../lib/jRna.js' );
-
-function html (text) {
-    var root = jQuery("body");
-    root.html(text);
-    return root;
-};
+const jRna = require( '../lib/jRna.js' );
 
 describe( "jRna", () => {
     it("knows where it comes from", (done) => {
@@ -45,7 +31,7 @@ describe( "jRna", () => {
         var enzyme = rna.attach(html('<div id="myid">some text</div>'));
 
         enzyme.should.have.property("myid");
-        enzyme.myid.should.be.an.instanceof(jQuery);
+        enzyme.myid.should.be.an.instanceof($);
         enzyme.myid.html().should.be.equal("some text");
 
         done();
@@ -64,22 +50,22 @@ describe( "jRna", () => {
         var enzyme = rna.spawn( { initial: 42 } ).append_to(html());
 
         // now real test be here
-        jQuery("#display").html().should.equal("42");
+        $("#display").html().should.equal("42");
 
         enzyme.display(137);
-        jQuery("#display").html().should.equal("137");
+        $("#display").html().should.equal("137");
 
         enzyme.reset();
-        jQuery("#display").html().should.equal("42");
+        $("#display").html().should.equal("42");
 
         enzyme.display("<i>");
-        jQuery("#display").html().should.equal("&lt;i&gt;");
+        $("#display").html().should.equal("&lt;i&gt;");
 
-        enzyme.element("display").should.be.an.instanceof(jQuery);
+        enzyme.element("display").should.be.an.instanceof($);
         should.not.exist(enzyme.element("noexist"));
 
         enzyme.remove();
-        jQuery("body").html().should.equal('');
+        $("body").html().should.equal('');
 
         done();
     });
@@ -91,9 +77,9 @@ describe( "jRna", () => {
 
         var probe = rna.attach(root);
 
-        jQuery("#in").click();
+        $("#in").click();
         probe.trace.should.equal(1);
-        jQuery("#in").click();
+        $("#in").click();
         probe.trace.should.equal(2);
 
         done();
