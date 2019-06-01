@@ -18,15 +18,19 @@
     </div>
     <script lang="javascript" id="main">
         "use strict";
+        const title = jRna.documentTitle('', ' - ', document.title);
+
         const hide = new jRna()
             .element("content")
             .output("toggle")
             .toggle("toggle", function() {
                 this.content.hide();
                 this.toggle("show");
+                title[0] = "[hidden]";
             }, function () {
                 this.content.show();
                 this.toggle("hide");
+                title[0] = "[visible]";
             })
             .attach($("#root"));
     </script>
