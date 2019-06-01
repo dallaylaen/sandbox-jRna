@@ -18,17 +18,17 @@
     </div>
     <script lang="javascript" id="main">
         "use strict";
-        var hide = new jRna();
-        hide.element("content");
-        hide.output("toggle");
-        hide.toggle("toggle", function() {
-            this.content.hide();
-            this.toggle("show");
-        }, function () {
-            this.content.show();
-            this.toggle("hide");
-        });
-        hide.attach($("#root"));
+        const hide = new jRna()
+            .element("content")
+            .output("toggle")
+            .toggle("toggle", function() {
+                this.content.hide();
+                this.toggle("show");
+            }, function () {
+                this.content.show();
+                this.toggle("hide");
+            })
+            .attach($("#root"));
     </script>
 </body>
 </html>
