@@ -122,15 +122,34 @@ describe( "jRna", () => {
         done();
     });
 
+    it("can attach and append_to by id", (done) => {
+        const root = html('<div id="main"><span id="title"></span></div>');
+
+        const outer = new jRna()
+            .output('title')
+            .attach('main');
+
+        outer.title('foobar');
+        root.find('#title').html().should.equal('foobar');
+
+        const inner = new jRna()
+            .html('<span id="inner">hello</span>')
+            .append_to('main');
+
+        root.find('#inner').html().should.equal('hello');
+
+        done();
+    });
+
     it("provides toggle functionality", (done) => {
         const root = html('<button id="switch">click me</button>');
         let on = 0, off = 0;
 
         const box = new jRna()
             .output( "switch", "label" )
-            .toggle( "switch", 
-                function () { this.label("turn off"); on++ }, 
-                function () { this.label("turn on"); off++ } 
+            .toggle( "switch",
+                function () { this.label("turn off"); on++ },
+                function () { this.label("turn on"); off++ }
         ).attach(root);
 
         const button = root.find('#switch');
@@ -139,7 +158,7 @@ describe( "jRna", () => {
         on.should.equal(1);
         off.should.equal(0);
         button.html().should.equal("turn off");
-        
+
         button.click();
         on.should.equal(1);
         off.should.equal(1);
