@@ -37,6 +37,29 @@ describe( "jRna", () => {
         done();
     });
 
+    it( "provides default values", (done) => {
+        html(''); // unused, but reset just in case
+        let init_times = 0;
+
+        const rna = new jRna()
+            .html('')
+            .def("foo", 42)
+            .init("bar", function() { init_times++; return 137 } )
+            .args("foo", "bar");
+
+        const noargs = rna.spawn();
+        noargs.should.have.property('foo', 42);
+        noargs.should.have.property('bar', 137);
+        init_times.should.equal(1);
+
+        const withargs = rna.spawn({foo: 3.14, bar: 2.718});
+        withargs.foo.should.equal(3.14);
+        withargs.bar.should.equal(2.718);
+        init_times.should.equal(1); // initializer never ran
+
+        done();
+    });
+
     it( "can modify document", (done) => {
         html(''); // reset document
         var rna = new jRna().html('<span id="display"></span>');
