@@ -13,7 +13,7 @@
 
     <!-- initial node to attach to -->
     <div id="root">
-        <a href="#download" id="download">Download</a>
+        <a href="#download" class="jrna-download">Download</a>
     </div>
 
     <!-- the script is here -->
@@ -23,7 +23,7 @@
             .download( 'download', function () {
                 return 'hello world';
             })
-            .attach($('#root'));
+            .attach('#root');
     </script>
 
     <!-- describe how to use the page, if needed -->

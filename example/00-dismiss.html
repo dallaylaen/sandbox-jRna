@@ -7,8 +7,14 @@
     <script lang="javascript" id="description">
         var desc = {"title":"Dismissable message - jRna examples"}
     </script>
+    <script lang="javascript">
+        window.onerror = function(msg) {
+            document.getElementById("error").innerHTML += '<div>'+msg+'</div>';
+        };
+    </script>
 </head>
 <body>
+    <div id="error" style="color: red"></div>
     <h1>Dismissable message - jRna examples</h1>
 
     <!-- initial node to attach to -->
@@ -20,20 +26,20 @@
     <script lang="javascript" id="main">
         "use strict";
     // create jRna description
-    var message = new jRna();
+    const message = new jRna();
 
     // create an output method say()
-    // associated with element that has id="content"
+    // associated with element that has class="content"
     message.output( "content", "say" );
 
     // create an input associated with callback
     message.click( "dismiss", function () { this.remove() } );
 
     // create an in-memory template
-    message.html('<span id="content"></span><a href="#" id="dismiss">[x]</a>');
+    message.html('<span class="jrna-content"></span><a href="#" class="jrna-dismiss">[x]</a>');
 
     // now attach to some HTML element
-    message.spawn().append_to($("#where-message-appears")).say = 'Hello!';
+    message.spawn().append_to('#where-message-appears').say = 'Hello!';
     </script>
 
     <!-- describe how to use the page, if needed -->

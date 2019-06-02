@@ -15,20 +15,20 @@
 
     <!-- invisible widget sources -->
     <div id="library" style="display: none">
-        <div id="editor">
-            <input id="value">
-            <input type="submit" id="save" value="save">
-            <input type="submit" id="cancel" value="cancel">
+        <div class="editor">
+            <input class="jrna-value">
+            <input type="submit" class="jrna-save" value="save">
+            <input type="submit" class="jrna-cancel" value="cancel">
         </div>
 
-        <div id="box">
+        <div class="box">
             <div>
-                <span id="title"></span>
-                <a href="#" id="remove">[x]</a>
+                <span class="jrna-title"></span>
+                <a href="#" class="jrna-remove">[x]</a>
             </div>
             <div style="padding-left: 3%">
-                <div id="content"></div>
-                <div><a href="#" id="create">create new node</a></div>
+                <div class="jrna-content"></div>
+                <div><a href="#" class="jrna-create">create new node</a></div>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
     <script lang="javascript" id="main">
         "use strict";
         var editor = new jRna().args("callback");
-        editor.html_from("library", "editor");
+        editor.html_from("#library .editor");
         editor.input("value");
         editor.click("save", function() {
             this.callback( this.value );
@@ -48,7 +48,7 @@
         });
 
         var box = new jRna();
-        box.html_from("library", "box");
+        box.html_from("#library .box");
         box.element("content");
         box.output("title");
         box.click("remove", function() { this.remove() } );

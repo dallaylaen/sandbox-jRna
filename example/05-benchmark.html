@@ -11,13 +11,13 @@
 
     <!-- initial node to attach to -->
     <div id="root">
-        <div id="display">
-            Nodes created: <span id="iter">0</span> at <span id="speed">n/a</span> nodes/sec
-            <button id="start">start</button>
-            <button id="stop">stop it</button>
-            <button id="cut">remove nodes</button>
+        <div class="jrna-display">
+            Nodes created: <span class="jrna-iter">0</span> at <span class="jrna-speed">n/a</span> nodes/sec
+            <button class="jrna-start">start</button>
+            <button class="jrna-stop">stop it</button>
+            <button class="jrna-cut">remove nodes</button>
         </div>
-        <div id="tree">
+        <div class="jrna-tree">
         </div>
     </div>
 
@@ -54,10 +54,10 @@
                 stop = true;
                 this.cut();
             })
-            .attach($('#root'));
+            .attach('#root');
 
         const tree = new jRna()
-            .html('<span id="label"></span><div id="children" style="padding-left: 1%"></div>')
+            .html('<span class="jrna-label"></span><div class="jrna-children" style="padding-left: 1%"></div>')
             .output("label")
             .element("children");
         tree.on_attach( function() {

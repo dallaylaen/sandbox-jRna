@@ -11,16 +11,14 @@
 
     <!-- initial node to attach to -->
     <div id="root">
-        <input type="file" id="file">
-        <div id="info"></div>
-        <pre id="display"></pre>
+        <input type="file" class="jrna-file">
+        <div class="jrna-info"></div>
+        <pre class="jrna-display"></pre>
     </div>
 
     <div id="library" style="display: none">
-        <div id="meta">
-        <div>
-            <span id="key"></span>: <span id="value"></span>
-        </div>
+        <div class="meta">
+            <span class="jrna-key"></span>: <span class="jrna-value"></span>
         </div>
     </div>
 
@@ -29,7 +27,7 @@
         "use strict";
 
         const meta = new jRna()
-            .html_from("library", "meta")
+            .html_from('#library .meta')
             .output("key")
             .output("value")
             .args('key', 'value');
@@ -49,7 +47,7 @@
                     me.display = ret.content;
                 });
             })
-            .attach($('#root'));
+            .attach('#root');
     </script>
 
     <!-- describe how to use the page, if needed -->

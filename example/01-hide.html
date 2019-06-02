@@ -9,10 +9,10 @@
 <body>
     <h1>Show/hide with jRna</h1>
     <div id="root">
-        <div id="header">
-        <a href="#" id="toggle">hide</a>
+        <div class="header">
+        <a href="#" class="jrna-toggle">hide</a>
         </div>
-        <div id="content">
+        <div class="jrna-content">
             Some content here.
         </div>
     </div>
@@ -32,7 +32,7 @@
                 this.toggle = 'hide';
                 title[0] = "[visible]";
             })
-            .attach($("#root"));
+            .attach('#root');
     </script>
 </body>
 </html>
