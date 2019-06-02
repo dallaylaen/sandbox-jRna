@@ -28,7 +28,7 @@ describe( "jRna", () => {
 
     it( "spawns instances with elements", (done) => {
         var rna = new jRna().element("myid");
-        var enzyme = rna.attach(html('<div id="myid">some text</div>'));
+        var enzyme = rna.attach(html('<div class="jrna-myid">some text</div>'));
 
         enzyme.should.have.property("myid");
         enzyme.myid.should.be.an.instanceof($);
@@ -63,7 +63,7 @@ describe( "jRna", () => {
     it( "can modify document", (done) => {
         html(''); // reset document
         const rna = new jRna()
-            .html('<span id="display"></span>')
+            .html('<span class="jrna-display"></span>')
             .output('display')
             .args('initial')
             .def( 'reset', function() {
@@ -76,17 +76,17 @@ describe( "jRna", () => {
 
         // now real test be here
         enzyme.should.have.property( 'display', 42 );
-        $("#display").html().should.equal("42");
+        $(".jrna-display").html().should.equal("42");
 
         enzyme.display = 137;
         enzyme.should.have.property( 'display', 137 );
-        $("#display").html().should.equal("137");
+        $(".jrna-display").html().should.equal("137");
 
         enzyme.reset();
-        $("#display").html().should.equal("42");
+        $(".jrna-display").html().should.equal("42");
 
         enzyme.display = '<i>';
-        $("#display").html().should.equal("&lt;i&gt;");
+        $(".jrna-display").html().should.equal("&lt;i&gt;");
 
         enzyme.element("display").should.be.an.instanceof($);
         should.not.exist(enzyme.element("noexist"));
@@ -98,49 +98,49 @@ describe( "jRna", () => {
     });
 
     it("can process events", (done) => {
-        var root = html('<div><button type="button" id="in">Click me!</div>');
+        var root = html('<div><button type="button" class="jrna-in">Click me!</div>');
         var rna = new jRna().init("trace", function() { return 0 } );
         rna.click("in", function() { this.trace++ });
 
         var probe = rna.attach(root);
 
-        $("#in").click();
+        $(".jrna-in").click();
         probe.trace.should.equal(1);
-        $("#in").click();
+        $(".jrna-in").click();
         probe.trace.should.equal(2);
 
         done();
     });
 
     it("can read html from the document itself", (done) => {
-        var root = html('<div id="main"></div><div id="widget"><span id="label"></span></div>');
+        var root = html('<div class="main"></div><div class="widget"><span class="jrna-label"></span></div>');
         var rna  = new jRna().output("label").html_from("widget");
 
-        var probe = rna.spawn().append_to(root.find("#main"));
+        var probe = rna.spawn().append_to(root.find(".main"));
         probe.label = "foo bared";
 
-        root.html().should.match(/<span id="label">foo bared<\/span>/);
+        root.html().should.match(/<span class="jrna-label">foo bared<\/span>/);
 
         done();
     });
 
     it ("attaches to one and only one element", (done) => {
-        const root = html('<div id="main"></div><div id="main"><span id="my"></span></div>');
-        const rna  = new jRna().output("my").html('<span id="my"></span>');
+        const root = html('<div class="main"></div><div class="main"><span class="jrna-my"></span></div>');
+        const rna  = new jRna().output("my").html('<span class="jrna-my"></span>');
 
         expect( () => {
-            rna.attach( root.find("#nothing") );
+            rna.attach( root.find(".nothing") );
         }).to.throw(/Cannot attach to a missing element.*jRna@.*usage.js:\d+/);
 
         expect( () => {
-            rna.attach( root.find( "#main" ) );
-        }).to.throw(/No element .*#my.*jRna/);
+            rna.attach( root.find( ".main" ) );
+        }).to.throw(/No element .*.my.*jRna/);
 
         expect( () => {
-            rna.spawn().append_to( root.find("#nothing") );
+            rna.spawn().append_to( root.find(".nothing") );
         }).to.throw("Cannot append to a missing element");
 
-        const box = rna.spawn().append_to( root.find( "#main" ) );
+        const box = rna.spawn().append_to( root.find( ".main" ) );
         box.my = 'ready';
         root.html().should.match(/div.*span.*ready.*span.*div.*div.*div/);
         root.html().should.not.match(/div.*div.*div.*span.*ready.*span.*div/);
@@ -150,20 +150,20 @@ describe( "jRna", () => {
     });
 
     it("can attach and append_to by id", (done) => {
-        const root = html('<div id="main"><span id="title"></span></div>');
+        const root = html('<div id="main"><span class="jrna-title"></span></div>');
 
         const outer = new jRna()
             .output('title')
-            .attach('main');
+            .attach('#main');
 
         outer.title = 'foobar';
-        root.find('#title').html().should.equal('foobar');
+        root.find('.jrna-title').html().should.equal('foobar');
 
         const inner = new jRna()
-            .html('<span id="inner">hello</span>')
-            .append_to('main');
+            .html('<span class="inner">hello</span>')
+            .append_to('#main');
 
-        root.find('#inner').html().should.equal('hello');
+        root.find('.inner').html().should.equal('hello');
 
         done();
     });
@@ -171,29 +171,29 @@ describe( "jRna", () => {
     it("can read & write inputs", (done) => {
         const root = html('');
         const rna = new jRna()
-            .html('<input id="readme"></input>')
+            .html('<input class="jrna-readme"></input>')
             .input('readme')
             .args('readme');
 
         const noinit = rna.append_to(root);
         noinit.should.have.property('readme', '');
-        root.find('#readme').val('foobar');
+        root.find('.jrna-readme').val('foobar');
         noinit.should.have.property('readme', 'foobar');
         noinit.readme = 42;
         // oops, number lost in translation!
-        root.find('#readme').val().should.equal('42');
+        root.find('.jrna-readme').val().should.equal('42');
         noinit.should.have.property('readme', '42');
         noinit.remove();
 
         const withinit = rna.append_to(root, { readme: 'say something' });
-        root.find('#readme').val().should.equal('say something');
+        root.find('.jrna-readme').val().should.equal('say something');
         withinit.remove();
 
         done();
     });
 
     it("provides toggle functionality", (done) => {
-        const root = html('<button id="switch">click me</button>');
+        const root = html('<button class="jrna-switch">click me</button>');
         let on = 0, off = 0;
 
         const box = new jRna()
@@ -203,7 +203,7 @@ describe( "jRna", () => {
                 function () { this.label = 'turn on'; off++ }
         ).attach(root);
 
-        const button = root.find('#switch');
+        const button = root.find('.jrna-switch');
 
         button.click();
         on.should.equal(1);
@@ -221,7 +221,7 @@ describe( "jRna", () => {
     it("provides sticky_click functionality", (done) => {
         let trace = 0;
 
-        const root = html('<button id="sticky">click me</button>');
+        const root = html('<button class="jrna-sticky">click me</button>');
         const rna  = new jRna()
             .sticky_click("sticky", "down", function () {
                 this.element("sticky").html("clicked");
