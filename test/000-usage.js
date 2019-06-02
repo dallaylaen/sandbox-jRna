@@ -75,9 +75,11 @@ describe( "jRna", () => {
         var enzyme = rna.spawn( { initial: 42 } ).append_to(html());
 
         // now real test be here
+        enzyme.should.have.property( 'display', 42 );
         $("#display").html().should.equal("42");
 
         enzyme.display = 137;
+        enzyme.should.have.property( 'display', 137 );
         $("#display").html().should.equal("137");
 
         enzyme.reset();
