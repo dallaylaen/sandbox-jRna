@@ -62,26 +62,28 @@ describe( "jRna", () => {
 
     it( "can modify document", (done) => {
         html(''); // reset document
-        var rna = new jRna().html('<span id="display"></span>');
-        rna.output("display").args("initial");
-        rna.def( "reset", function() {
-            this.display( this.initial );
-        });
-        rna.on_attach(function() {
-            this.reset();
-        });
+        const rna = new jRna()
+            .html('<span id="display"></span>')
+            .output('display')
+            .args('initial')
+            .def( 'reset', function() {
+                this.display = this.initial;
+            })
+            .on_attach( function() {
+                this.reset()
+            });
         var enzyme = rna.spawn( { initial: 42 } ).append_to(html());
 
         // now real test be here
         $("#display").html().should.equal("42");
 
-        enzyme.display(137);
+        enzyme.display = 137;
         $("#display").html().should.equal("137");
 
         enzyme.reset();
         $("#display").html().should.equal("42");
 
-        enzyme.display("<i>");
+        enzyme.display = '<i>';
         $("#display").html().should.equal("&lt;i&gt;");
 
         enzyme.element("display").should.be.an.instanceof($);
@@ -113,7 +115,7 @@ describe( "jRna", () => {
         var rna  = new jRna().output("label").html_from("widget");
 
         var probe = rna.spawn().append_to(root.find("#main"));
-        probe.label("foo bared");
+        probe.label = "foo bared";
 
         root.html().should.match(/<span id="label">foo bared<\/span>/);
 
@@ -137,7 +139,7 @@ describe( "jRna", () => {
         }).to.throw("Cannot append to a missing element");
 
         const box = rna.spawn().append_to( root.find( "#main" ) );
-        box.my("ready");
+        box.my = 'ready';
         root.html().should.match(/div.*span.*ready.*span.*div.*div.*div/);
         root.html().should.not.match(/div.*div.*div.*span.*ready.*span.*div/);
 
@@ -152,7 +154,7 @@ describe( "jRna", () => {
             .output('title')
             .attach('main');
 
-        outer.title('foobar');
+        outer.title = 'foobar';
         root.find('#title').html().should.equal('foobar');
 
         const inner = new jRna()
@@ -171,8 +173,8 @@ describe( "jRna", () => {
         const box = new jRna()
             .output( "switch", "label" )
             .toggle( "switch",
-                function () { this.label("turn off"); on++ },
-                function () { this.label("turn on"); off++ }
+                function () { this.label = 'turn off'; on++ },
+                function () { this.label = 'turn on'; off++ }
         ).attach(root);
 
         const button = root.find('#switch');
