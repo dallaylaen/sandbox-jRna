@@ -42,10 +42,10 @@ describe( "jRna", () => {
         let init_times = 0;
 
         const rna = new jRna()
-            .html('')
-            .def("foo", 42)
-            .init("bar", function() { init_times++; return 137 } )
-            .args("foo", "bar");
+            .html('<br>')
+            .def ('foo', 42)
+            .init('bar', function() { init_times++; return 137 } )
+            .args('foo', 'bar');
 
         const noargs = rna.spawn();
         noargs.should.have.property('foo', 42);
@@ -93,6 +93,20 @@ describe( "jRna", () => {
 
         enzyme.remove();
         $("body").html().should.equal('');
+
+        done();
+    });
+
+    it('can exist in single-element setup', (done) => {
+        const root = html('<div id="root"></div>');
+        const rna = new jRna()
+            .html('<span class="jrna-label"></span>')
+            .output('label')
+            .args('label');
+
+        const inst = rna.append_to('#root', { label: 'see you' });
+
+        root.html().should.equal('<div id="root"><span class="jrna-label">see you</span></div>');
 
         done();
     });
@@ -177,7 +191,7 @@ describe( "jRna", () => {
     it("can read & write inputs", (done) => {
         const root = html('');
         const rna = new jRna()
-            .html('<input class="jrna-readme"></input>')
+            .html('<input class="jrna-readme">')
             .input('readme')
             .args('readme');
 
