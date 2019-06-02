@@ -56,13 +56,14 @@
             var me = this;
             var ed = editor.spawn();
             ed.callback = function(str) {
-                box.spawn().append_to( me.content ).title(str);
+                box.spawn().append_to( me.content ).title = str;
             };
             ed.on_remove( function() { me.editor_active = false } );
             ed.append_to( this.content );
         });
 
-        var initial = box.spawn().append_to( $('#root') ).title("root node");
+        var initial = box.spawn().append_to( $('#root') );
+        initial.title = 'root node';
     </script>
 
     <!-- describe how to use the page, if needed -->

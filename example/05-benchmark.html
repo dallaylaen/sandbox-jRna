@@ -41,8 +41,8 @@
                 this.tree.html('');
             })
             .def("update", function () {
-                this.iter( this.iter() + 1 );
-                this.speed( (this.iter() / elapsed(epoch)).toFixed(2));
+                this.iter++;
+                this.speed = (this.iter / elapsed(epoch)).toFixed(2);
             })
             .click("stop", function () {
                 stop = true;
@@ -61,7 +61,7 @@
             .output("label")
             .element("children");
         tree.on_attach( function() {
-            this.label(elapsed(epoch));
+            this.label = elapsed(epoch);
             let me = this;
             setTimeout( function() {
                 if (stop) return;
@@ -75,7 +75,7 @@
         function start(timeout) {
             stop = false;
             epoch = new Date().getTime();
-            display.iter(0);
+            display.iter = 0;
             display.cut();
             setTimeout( () => {
                 stop = true;

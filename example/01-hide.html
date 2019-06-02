@@ -25,11 +25,11 @@
             .output("toggle")
             .toggle("toggle", function() {
                 this.content.hide();
-                this.toggle("show");
+                this.toggle = 'show';
                 title[0] = "[hidden]";
             }, function () {
                 this.content.show();
-                this.toggle("hide");
+                this.toggle = 'hide';
                 title[0] = "[visible]";
             })
             .attach($("#root"));

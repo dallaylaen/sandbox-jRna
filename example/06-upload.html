@@ -11,7 +11,6 @@
 
     <!-- initial node to attach to -->
     <div id="root">
-        <div id="ready"></div>
         <input type="file" id="file">
         <div id="info"></div>
         <pre id="display"></pre>
@@ -32,10 +31,10 @@
         const meta = new jRna()
             .html_from("library", "meta")
             .output("key")
-            .output("value");
+            .output("value")
+            .args('key', 'value');
 
         const rna = new jRna()
-            .output("ready")
             .output("display")
             .element("info")
             .upload("file")
@@ -43,11 +42,11 @@
                 const me = this;
                 this.file( function(ret) {
                     me.info.html('');
-                    meta.append_to(me.info) .key("name") .value(ret.name);
-                    meta.append_to(me.info) .key("size") .value(ret.size);
-                    meta.append_to(me.info) .key("type") .value(ret.type);
-                    meta.append_to(me.info) .key("last modified") .value(new Date(ret.lastModified));
-                    me.display(ret.content);
+                    meta.append_to(me.info, {key: 'name', value: ret.name });
+                    meta.append_to(me.info, {key: 'size', value: ret.size });
+                    meta.append_to(me.info, {key: 'type', value: ret.type });
+                    meta.append_to(me.info, {key: 'last modified', value: new Date(ret.lastModified) });
+                    me.display = ret.content;
                 });
             })
             .attach($('#root'));
