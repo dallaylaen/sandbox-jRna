@@ -40,7 +40,7 @@
         editor.html_from("library", "editor");
         editor.input("value");
         editor.click("save", function() {
-            this.callback( this.value() );
+            this.callback( this.value );
             this.remove();
         });
         editor.click("cancel", function() {
