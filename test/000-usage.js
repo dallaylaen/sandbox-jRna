@@ -168,6 +168,30 @@ describe( "jRna", () => {
         done();
     });
 
+    it("can read & write inputs", (done) => {
+        const root = html('');
+        const rna = new jRna()
+            .html('<input id="readme"></input>')
+            .input('readme')
+            .args('readme');
+
+        const noinit = rna.append_to(root);
+        noinit.should.have.property('readme', '');
+        root.find('#readme').val('foobar');
+        noinit.should.have.property('readme', 'foobar');
+        noinit.readme = 42;
+        // oops, number lost in translation!
+        root.find('#readme').val().should.equal('42');
+        noinit.should.have.property('readme', '42');
+        noinit.remove();
+
+        const withinit = rna.append_to(root, { readme: 'say something' });
+        root.find('#readme').val().should.equal('say something');
+        withinit.remove();
+
+        done();
+    });
+
     it("provides toggle functionality", (done) => {
         const root = html('<button id="switch">click me</button>');
         let on = 0, off = 0;
