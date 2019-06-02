@@ -113,10 +113,12 @@ describe( "jRna", () => {
     });
 
     it("can read html from the document itself", (done) => {
-        var root = html('<div class="main"></div><div class="widget"><span class="jrna-label"></span></div>');
-        var rna  = new jRna().output("label").html_from("widget");
+        var root = html('<div id="main"></div><div id="widget"><span class="jrna-label"></span></div>');
+        var rna  = new jRna().output("label").html_from("#widget");
 
-        var probe = rna.spawn().append_to(root.find(".main"));
+        rna._html.should.match(/<span class="jrna-label">/);
+
+        var probe = rna.spawn().append_to(root.find("#main"));
         probe.label = "foo bared";
 
         root.html().should.match(/<span class="jrna-label">foo bared<\/span>/);
@@ -125,7 +127,7 @@ describe( "jRna", () => {
     });
 
     it ("attaches to one and only one element", (done) => {
-        const root = html('<div class="main"></div><div class="main"><span class="jrna-my"></span></div>');
+        const root = html('<div id="decoy" class="main"></div><div class="main"><span class="jrna-my"></span></div>');
         const rna  = new jRna().output("my").html('<span class="jrna-my"></span>');
 
         expect( () => {
@@ -133,14 +135,18 @@ describe( "jRna", () => {
         }).to.throw(/Cannot attach to a missing element.*jRna@.*usage.js:\d+/);
 
         expect( () => {
-            rna.attach( root.find( ".main" ) );
-        }).to.throw(/No element .*.my.*jRna/);
+            rna.attach( root.find( "#decoy" ) );
+        }).to.throw(/Cannot fulfill \.jrna-my with a missing element/);
 
         expect( () => {
             rna.spawn().append_to( root.find(".nothing") );
         }).to.throw("Cannot append to a missing element");
 
-        const box = rna.spawn().append_to( root.find( ".main" ) );
+        expect( () => {
+            rna.spawn().append_to( root.find(".main") );
+        }).to.throw("Cannot append to an ambiguous element");
+
+        const box = rna.spawn().append_to( root.find( "#decoy" ) );
         box.my = 'ready';
         root.html().should.match(/div.*span.*ready.*span.*div.*div.*div/);
         root.html().should.not.match(/div.*div.*div.*span.*ready.*span.*div/);
