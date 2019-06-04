@@ -16,7 +16,29 @@
         .active {
             background-color: yellow;
         }
-        td {
+        .grid-container {
+            display: grid;
+            height: 80%;
+            width: 60%;
+            text-align: center;
+        }
+        .cell {
+            margin: 1px;
+            border: 1px solid blue;
+            line-height: 100%;
+            text-align: center;
+        }
+        .middle {
+            position: relative;
+            transform: translateY(50%);
+            height: 100%;
+            line-height: 0;
+            display: inline-block;
+        }
+        .big {
+            font-size: 300%;
+        }
+        h1 {
             text-align: center;
         }
     </style>
@@ -27,8 +49,7 @@
 
     <!-- initial node to attach to -->
     <div id="root" align="center">
-        <table border="0" id="field" width="80%">
-        </table>
+        <div class="grid-container"></div>
     </div>
 
     <!-- the script is here -->
@@ -36,9 +57,9 @@
         "use strict";
 
         const cell = new jRna()
-            .html('<td class="jrna-cell"></td>')
-            .output('cell')
-            .args('cell')
+            .html('<div class="cell jrna-cell"><div class="jrna-label big middle"></div></div>')
+            .output('label')
+            .args('label')
             .toggle('cell', function() {
                 this.container.addClass('active');
             }, function () {
@@ -46,21 +67,19 @@
             } );
 
         let counter = 1;
-        const row = new jRna()
-            .html('<tr></tr>')
-            .args('count')
-            .on_attach(function() {
-                for (let i = 0; i < this.count; i++)
-                    cell.append_to(this.container, { cell: counter++ });
-            });
 
-        const table = new jRna()
+        const grid = new jRna()
             .args('count')
             .on_attach(function() {
-                for (let i = 0; i < this.count; i++)
-                    row.append_to(this.container, { count: this.count });
+                const percent = Math.floor(100/this.count) + '%';
+                this.container.css(
+                    'grid-template-columns',
+                    Array(this.count).fill(percent).join(' ')
+                );
+                for (let i = 0; i < this.count * this.count; i++)
+                    cell.append_to(this.container, { label: counter++ });
             })
-            .attach('#field', { count : 3 });
+            .attach('.grid-container', { count : 3 });
     </script>
 
     <!-- describe how to use the page, if needed -->
