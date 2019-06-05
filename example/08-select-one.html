@@ -18,22 +18,22 @@
         }
         .grid-container {
             display: grid;
-            height: 80%;
-            width: 60%;
+            height: 80vmin;
+            width: 80vmin;
             text-align: center;
         }
         .cell {
             margin: 1px;
             border: 1px solid blue;
-            line-height: 100%;
-            text-align: center;
         }
         .middle {
+            /* TODO this doesn't work in Chrome - find a better way */
+            /* but not now */
             position: relative;
             transform: translateY(50%);
-            height: 100%;
             line-height: 0;
             display: inline-block;
+            height: 100%;
         }
         .big {
             font-size: 300%;
@@ -56,14 +56,24 @@
     <script lang="javascript" id="main">
         "use strict";
 
+        let current;
         const cell = new jRna()
             .html('<div class="cell jrna-cell"><div class="jrna-label big middle"></div></div>')
             .output('label')
             .args('label')
-            .toggle('cell', function() {
-                this.container.addClass('active');
-            }, function () {
-                this.container.removeClass('active');
+            .dumbSwitch('select', {
+                0: function() {
+                    this.container.removeClass('active');
+                },
+                1: function() {
+                    this.container.addClass('active');
+                }
+            })
+            .click('cell', function() {
+                if (current)
+                    current.select(0);
+                this.select(1);
+                current = this;
             } );
 
         let counter = 1;
@@ -72,10 +82,9 @@
             .args('count')
             .on_attach(function() {
                 const percent = Math.floor(100/this.count) + '%';
-                this.container.css(
-                    'grid-template-columns',
-                    Array(this.count).fill(percent).join(' ')
-                );
+                const split   = Array(this.count).fill(percent).join(' ');
+                this.container.css( 'grid-template-columns', split );
+                this.container.css( 'grid-template-rows', split );
                 for (let i = 0; i < this.count * this.count; i++)
                     cell.append_to(this.container, { label: counter++ });
             })
