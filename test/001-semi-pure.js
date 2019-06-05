@@ -8,24 +8,22 @@ const html = require( '../lib/test-mock-html.js' );
 
 const jRna = require( '../lib/jRna.js' );
 
-describe('jRna(no html)', () => {
-    it ('provides dumbSwitch functionality', done => {
-        const trace = [];
-
-        const rna = new jRna()
-            .html('<span></span>')
-            .def('flag', false)
-            .dumbSwitch( 'toggle', {
-                0 : function(olds, news) {
-                    this.flag = false;
-                    trace.push([0, olds, news]);
-                },
-                1 : function(olds, news) {
-                    this.flag = true;
-                    trace.push([1, olds, news]);
-                }
-            });
-
+describe('jRna.stickyState', () => {
+    const trace = [];
+    const rna = new jRna()
+        .html('<span></span>')
+        .def('flag', false)
+        .stickyState( 'toggle', {
+            0 : function(olds, news) {
+                this.flag = false;
+                trace.push([0, olds, news]);
+            },
+            1 : function(olds, news) {
+                this.flag = true;
+                trace.push([1, olds, news]);
+            }
+        });
+    it ('provides sticky state', done => {
         const inst = rna.spawn();
 
         // initial state
@@ -50,6 +48,12 @@ describe('jRna(no html)', () => {
         inst.flag.should.equal(true);
         trace.should.deep.equal([[0, undefined, 0], [1, 0, 1]]);
 
+        const other = rna.spawn();
+        should.not.exist( other.toggle() );
+
+        done();
+    });
+    it ('does not mix states', done => {
         const other = rna.spawn();
         should.not.exist( other.toggle() );
 
