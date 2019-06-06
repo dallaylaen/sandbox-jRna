@@ -1,0 +1,17 @@
+.column {
+    float: left;
+    border: dotted black 1px;
+    padding: 1px;
+}
+.narrow {
+    width: 19%;
+}
+.wide {
+    width: 79%;
+}
+.hidden {
+    display: none;
+}
+.selected {
+    border-left: solid red 1em;
+};
