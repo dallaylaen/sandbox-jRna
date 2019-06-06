@@ -1,0 +1,91 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Multiple tabs - jRna examples</title>
+    <script lang="javascript" src="3rd-party/jquery.js"></script>
+    <script lang="javascript" src="../lib/jRna.js"></script>
+    <script lang="javascript" id="description">
+        const descr = {"title":"Multiple tabs - jRna examples"}
+    </script>
+    <script lang="javascript">
+        window.onerror = function(msg) {
+            document.getElementById("error").innerHTML += '<div>'+msg+'</div>';
+        };
+    </script>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div id="error" style="color: red"></div>
+    <h1>Multiple tabs - jRna examples</h1>
+
+    <!-- initial node to attach to -->
+    <div id="root">
+        <div class="narrow column" id="left-sidebar">
+            <div>
+                <input class="jrna-newname">
+            </div>
+            <div class="jrna-list">
+            </div>
+        </div>
+        <div class="wide column" id="main-text">
+            <textarea class="jrna-text"></textarea>
+        </div>
+    </div>
+
+    <!-- the script is here -->
+    <script lang="javascript" id="main">
+        "use strict";
+
+        const mainText = new jRna()
+            .input('text')
+            .attach('#main-text');
+
+        let currentSelection;
+        const contact = new jRna()
+            .html('<div class="jrna-name"></div>')
+            .output('name')
+            .args('name')
+            .click('name', function() { this.selected(true); })
+            .def('text', '')
+            .stickyState('selected', {
+                true: function() {
+                    if (currentSelection)
+                        currentSelection.selected(false);
+                    mainText.text = this.text;
+                    this.container.addClass('selected');
+                    currentSelection = this;
+                },
+                false: function() {
+                    this.text = mainText.text;
+                    mainText.text = '';
+                    this.container.removeClass('selected');
+                }
+            });
+
+        const contactList = new jRna()
+            .input('newname')
+            .element('list')
+            .init('children', () => ({}) )
+            .def('create', function(name) {
+                // TODO unique
+                if (this.children[name])
+                    return false;
+                const node = contact.append_to(this.list, { name: name });
+                this.children[name] = node;
+                node.selected(true);
+                return true;
+            })
+            .on("newname", "keydown", function(ev) {
+                if (ev.key == 'Enter') {
+                    if (this.create( this.newname ))
+                        this.newname = '';
+                };
+            })
+            .attach('#left-sidebar');
+    </script>
+
+    <!-- describe how to use the page, if needed -->
+    <div id="usage">
+    </div>
+</body>
+</html>
