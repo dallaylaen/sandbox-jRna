@@ -30,7 +30,20 @@
         <div id="upload">
             <input type="file" class="jrna-file">
         </div>
-        <div id="container">
+        <div id="show">
+        </div>
+    </div>
+
+    <div id="library" style="display: none">
+        <div class="key-simple">
+            <span class="jrna-key"></span>:
+            <span class="jrna-value"></span>
+        </div>
+
+        <div class="key-nested">
+            <a href="#" class="jrna-toggle">[-]</a>
+            <span class="jrna-key"></span>:
+            <div class="jrna-content object"></div>
         </div>
     </div>
 
@@ -38,51 +51,66 @@
     <script lang="javascript" id="main">
         "use strict";
 
-        const node = {};
+        const nodeTypes = {};
+        function getContainer(value) {
+            // TODO if (Array.isArray)
+            // sane default - display as string
+            return nodeTypes[ typeof value ] || nodeType[ 'string' ];
+        };
 
-        node.undefined = node.null = new jRna()
-            .html('<span class="null"><span class="jrna-value">null</span></span>')
-            .args('value'); // unused
-        node.number = new jRna()
-            .html('<span class="number"><span class="jrna-value"></span></span>')
-            .output('value')
-            .args('value');
-        node.string = new jRna()
-            .html('<span class="string">\'<span class="jrna-value"></span>\'</span>')
-            .output('value')
-            .args('value');
-        // TODO array
-        const keyvalue = new jRna()
-            .html('<div><span class="jrna-key"></span>: </div>')
-            .args('key', 'value')
-            .output('key')
-            .on_attach(function() {
-                const nodetype = typeof this.value;
+        const simpleEntry = new jRna()
+            .html_from('#library .key-simple')
+            .args( 'key', 'value' )
+            .output( 'key' )
+            .output( 'value' );
 
-                node[nodetype].append_to( this.container, { value : this.value });
-            });
-
-        node.object = new jRna()
-            .html('<div class="object"><div class="jrna-content"></div></div>')
+        const nestedValue = new jRna()
+            .html('<div></div>')
             .args('value')
-            .element('content')
-            .on_attach(function() {
-                // TODO sort
+            .on_attach( function() {
                 for (let key in this.value) {
-                    keyvalue.append_to(this.content, { key: key, value: this.value[key]} );
+                    getContainer(this.value[key]).append_to( 
+                        this.container, { key: key, value: this.value[key] }
+                    );
                 };
             });
+
+        const nestedEntry = new jRna()
+            .html_from('#library .key-nested')
+            .args( 'key', 'value' )
+            .output( 'key' )
+            .element( 'content' )
+            .output( 'toggle' )
+            .toggle( 'toggle', function() {
+                this.content.hide();
+                this.toggle = '[+]';
+            }, function () {
+                this.content.show();
+                this.toggle = '[-]';
+            })
+            .on_attach( function() {
+                nestedValue.attach( this.content, { value: this.value } );
+            });
+
+        for (let i of ['null', 'undefined', 'number', 'string'])
+            nodeTypes[i] = simpleEntry;
+        for (let i of ['object', 'array', 'function'])
+            nodeTypes[i] = nestedEntry;
 
         let last;
         const upload = new jRna()
             .upload('file')
             .on('file', 'change', function() {
                 this.file( function(raw) {
-                    console.log(raw);
                     const obj = JSON.parse(raw.content);
                     if(last)
                         last.remove();
-                    last = keyvalue.append_to('#container', { value : obj })
+                    try {
+                    last = nestedValue.append_to('#show', { value : obj });
+                    } catch (e) {
+                        console.log(e);
+                    };
+                    console.log("alive");
                 });
             })
             .attach('#upload');
