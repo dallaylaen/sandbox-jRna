@@ -59,7 +59,7 @@
         };
 
         const simpleEntry = new jRna()
-            .html_from('#library .key-simple')
+            .htmlFrom('#library .key-simple')
             .args( 'key', 'value' )
             .output( 'key' )
             .output( 'value' );
@@ -67,16 +67,16 @@
         const nestedValue = new jRna()
             .html('<div></div>')
             .args('value')
-            .on_attach( function() {
+            .onAttach( function() {
                 for (let key in this.value) {
-                    getContainer(this.value[key]).append_to( 
+                    getContainer(this.value[key]).appendTo( 
                         this.container, { key: key, value: this.value[key] }
                     );
                 };
             });
 
         const nestedEntry = new jRna()
-            .html_from('#library .key-nested')
+            .htmlFrom('#library .key-nested')
             .args( 'key', 'value' )
             .output( 'key' )
             .element( 'content' )
@@ -88,7 +88,7 @@
                 this.content.show();
                 this.toggle = '[-]';
             })
-            .on_attach( function() {
+            .onAttach( function() {
                 nestedValue.attach( this.content, { value: this.value } );
             });
 
@@ -106,7 +106,7 @@
                     if(last)
                         last.remove();
                     try {
-                    last = nestedValue.append_to('#show', { value : obj });
+                    last = nestedValue.appendTo('#show', { value : obj });
                     } catch (e) {
                         console.log(e);
                     };

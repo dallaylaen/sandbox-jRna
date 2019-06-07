@@ -80,13 +80,13 @@
 
         const grid = new jRna()
             .args('count')
-            .on_attach(function() {
+            .onAttach(function() {
                 const percent = Math.floor(100/this.count) + '%';
                 const split   = Array(this.count).fill(percent).join(' ');
                 this.container.css( 'grid-template-columns', split );
                 this.container.css( 'grid-template-rows', split );
                 for (let i = 0; i < this.count * this.count; i++)
-                    cell.append_to(this.container, { label: counter++ });
+                    cell.appendTo(this.container, { label: counter++ });
             })
             .attach('.grid-container', { count : 3 });
     </script>

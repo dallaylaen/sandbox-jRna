@@ -60,13 +60,13 @@
             .html('<div><span class="jrna-label"></span><div class="jrna-children" style="padding-left: 1%"></div></div>')
             .output("label")
             .element("children");
-        tree.on_attach( function() {
+        tree.onAttach( function() {
             this.label = elapsed(epoch);
             let me = this;
             setTimeout( function() {
                 if (stop) return;
                 for( let i = 0; i<5; i++ ) {
-                    tree.spawn().append_to( me.children );
+                    tree.spawn().appendTo( me.children );
                 };
             }, 0);
             display.update();
@@ -80,7 +80,7 @@
             setTimeout( () => {
                 stop = true;
             }, timeout);
-            tree.spawn().append_to(display.tree);
+            tree.spawn().appendTo(display.tree);
         };
 
     </script>

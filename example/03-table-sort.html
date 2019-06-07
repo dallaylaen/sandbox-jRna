@@ -46,7 +46,7 @@
 
         const row = new jRna();
         row.init( "index", () => [] );
-        row.on_attach( function() {
+        row.onAttach( function() {
             let me = this;
             this.container.find("td").each((n, item) => {
                 me.index.push($(item).html());
@@ -77,7 +77,7 @@
         const table = new jRna();
         table.init( "rows", () => [] );
         table.init( "columns", () => [] );
-        table.on_attach( function() {
+        table.onAttach( function() {
             let me = this;
             this.container.find("tr").each( function( n, item ) {
                 if (!n) {
@@ -95,7 +95,7 @@
             if (reverse)
                 this.rows.reverse();
             this.rows.forEach(item => { item.remove() } );
-            this.rows.forEach(item => { item.append_to( this.container ) });
+            this.rows.forEach(item => { item.appendTo( this.container ) });
         } );
 
         var t = table.attach($('#root table'));

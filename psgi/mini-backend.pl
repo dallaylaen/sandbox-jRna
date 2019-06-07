@@ -65,7 +65,7 @@ __DATA__
 
         const container = new jRna()
             .output("result")
-            .on_attach(function(){
+            .onAttach(function(){
                 this.result("Click button to get smth...");
             })
             .input("call")

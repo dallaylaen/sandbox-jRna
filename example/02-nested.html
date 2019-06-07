@@ -37,7 +37,7 @@
     <script lang="javascript" id="main">
         "use strict";
         var editor = new jRna().args("callback");
-        editor.html_from("#library .editor");
+        editor.htmlFrom("#library .editor");
         editor.input("value");
         editor.click("save", function() {
             this.callback( this.value );
@@ -48,21 +48,21 @@
         });
 
         var box = new jRna();
-        box.html_from("#library .box");
+        box.htmlFrom("#library .box");
         box.element("content");
         box.output("title");
         box.click("remove", function() { this.remove() } );
-        box.sticky_click("create", "editor_active", function() {
+        box.stickyClick("create", "editor_active", function() {
             var me = this;
             var ed = editor.spawn();
             ed.callback = function(str) {
-                box.spawn().append_to( me.content ).title = str;
+                box.spawn().appendTo( me.content ).title = str;
             };
             ed.on_remove( function() { me.editor_active = false } );
-            ed.append_to( this.content );
+            ed.appendTo( this.content );
         });
 
-        var initial = box.spawn().append_to( $('#root') );
+        var initial = box.spawn().appendTo( $('#root') );
         initial.title = 'root node';
     </script>
 

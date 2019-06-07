@@ -27,7 +27,7 @@
         "use strict";
 
         const meta = new jRna()
-            .html_from('#library .meta')
+            .htmlFrom('#library .meta')
             .output("key")
             .output("value")
             .args('key', 'value');
@@ -40,10 +40,10 @@
                 const me = this;
                 this.file( function(ret) {
                     me.info.html('');
-                    meta.append_to(me.info, {key: 'name', value: ret.name });
-                    meta.append_to(me.info, {key: 'size', value: ret.size });
-                    meta.append_to(me.info, {key: 'type', value: ret.type });
-                    meta.append_to(me.info, {key: 'last modified', value: new Date(ret.lastModified) });
+                    meta.appendTo(me.info, {key: 'name', value: ret.name });
+                    meta.appendTo(me.info, {key: 'size', value: ret.size });
+                    meta.appendTo(me.info, {key: 'type', value: ret.type });
+                    meta.appendTo(me.info, {key: 'last modified', value: new Date(ret.lastModified) });
                     me.display = ret.content;
                 });
             })

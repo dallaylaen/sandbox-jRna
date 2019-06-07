@@ -70,7 +70,7 @@
                 // TODO unique
                 if (this.children[name])
                     return false;
-                const node = contact.append_to(this.list, { name: name });
+                const node = contact.appendTo(this.list, { name: name });
                 this.children[name] = node;
                 node.selected(true);
                 return true;
