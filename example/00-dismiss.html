@@ -36,7 +36,7 @@
     message.click( "dismiss", function () { this.remove() } );
 
     // create an in-memory template
-    message.html('<span class="jrna-content"></span><a href="#" class="jrna-dismiss">[x]</a>');
+    message.html('<span><span class="jrna-content"></span><a href="#" class="jrna-dismiss">[x]</a></span>');
 
     // now attach to some HTML element
     message.spawn().append_to('#where-message-appears').say = 'Hello!';

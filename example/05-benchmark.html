@@ -57,7 +57,7 @@
             .attach('#root');
 
         const tree = new jRna()
-            .html('<span class="jrna-label"></span><div class="jrna-children" style="padding-left: 1%"></div>')
+            .html('<div><span class="jrna-label"></span><div class="jrna-children" style="padding-left: 1%"></div></div>')
             .output("label")
             .element("children");
         tree.on_attach( function() {
