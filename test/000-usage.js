@@ -68,10 +68,10 @@ describe( "jRna", () => {
             .def( 'reset', function() {
                 this.display = this.initial;
             })
-            .on_attach( function() {
+            .onAttach( function() {
                 this.reset()
             });
-        var enzyme = rna.spawn( { initial: 42 } ).append_to(html());
+        var enzyme = rna.spawn( { initial: 42 } ).appendTo(html());
 
         // now real test be here
         enzyme.should.have.property( 'display', 42 );
@@ -103,7 +103,7 @@ describe( "jRna", () => {
             .output('label')
             .args('label');
 
-        const inst = rna.append_to('#root', { label: 'see you' });
+        const inst = rna.appendTo('#root', { label: 'see you' });
 
         root.html().should.equal('<div id="root"><span class="jrna-label">see you</span></div>');
 
@@ -127,11 +127,11 @@ describe( "jRna", () => {
 
     it("can read html from the document itself", (done) => {
         var root = html('<div id="main"></div><div id="widget"><span class="jrna-label"></span></div>');
-        var rna  = new jRna().output("label").html_from("#widget");
+        var rna  = new jRna().output("label").htmlFrom("#widget");
 
         rna._html.should.match(/<span class="jrna-label">/);
 
-        var probe = rna.spawn().append_to(root.find("#main"));
+        var probe = rna.spawn().appendTo(root.find("#main"));
         probe.label = "foo bared";
 
         root.html().should.match(/<span class="jrna-label">foo bared<\/span>/);
@@ -152,14 +152,14 @@ describe( "jRna", () => {
         }).to.throw(/Cannot fulfill \.jrna-my with a missing element/);
 
         expect( () => {
-            rna.spawn().append_to( root.find(".nothing") );
+            rna.spawn().appendTo( root.find(".nothing") );
         }).to.throw("Cannot append to a missing element");
 
         expect( () => {
-            rna.spawn().append_to( root.find(".main") );
+            rna.spawn().appendTo( root.find(".main") );
         }).to.throw("Cannot append to an ambiguous element");
 
-        const box = rna.spawn().append_to( root.find( "#decoy" ) );
+        const box = rna.spawn().appendTo( root.find( "#decoy" ) );
         box.my = 'ready';
         root.html().should.match(/div.*span.*ready.*span.*div.*div.*div/);
         root.html().should.not.match(/div.*div.*div.*span.*ready.*span.*div/);
@@ -168,7 +168,7 @@ describe( "jRna", () => {
         done();
     });
 
-    it("can attach and append_to by id", (done) => {
+    it("can attach and appendTo by id", (done) => {
         const root = html('<div id="main"><span class="jrna-title"></span></div>');
 
         const outer = new jRna()
@@ -180,7 +180,7 @@ describe( "jRna", () => {
 
         const inner = new jRna()
             .html('<span class="inner">hello</span>')
-            .append_to('#main');
+            .appendTo('#main');
 
         root.find('.inner').html().should.equal('hello');
 
@@ -194,7 +194,7 @@ describe( "jRna", () => {
             .input('readme')
             .args('readme');
 
-        const noinit = rna.append_to(root);
+        const noinit = rna.appendTo(root);
         noinit.should.have.property('readme', '');
         root.find('.jrna-readme').val('foobar');
         noinit.should.have.property('readme', 'foobar');
@@ -204,7 +204,7 @@ describe( "jRna", () => {
         noinit.should.have.property('readme', '42');
         noinit.remove();
 
-        const withinit = rna.append_to(root, { readme: 'say something' });
+        const withinit = rna.appendTo(root, { readme: 'say something' });
         root.find('.jrna-readme').val().should.equal('say something');
         withinit.remove();
 
@@ -237,12 +237,12 @@ describe( "jRna", () => {
         done();
     });
 
-    it("provides sticky_click functionality", (done) => {
+    it("provides stickyClick functionality", (done) => {
         let trace = 0;
 
         const root = html('<button class="jrna-sticky">click me</button>');
         const rna  = new jRna()
-            .sticky_click("sticky", "down", function () {
+            .stickyClick("sticky", "down", function () {
                 this.element("sticky").html("clicked");
                 trace++;
             })
@@ -264,14 +264,14 @@ describe( "jRna", () => {
         done();
     });
 
-    it( "provides on_remove and on_attach callbacks", () => {
+    it( "provides on_remove and onAttach callbacks", () => {
         const root = html('');
 
         let attach = 0;
         let remove = 0;
 
         const rna = new jRna()
-            .on_attach(function () { attach++ })
+            .onAttach(function () { attach++ })
             .html('<span>plain text</span>');
 
         // nothing happened yet
@@ -280,7 +280,7 @@ describe( "jRna", () => {
         remove.should.equal(0);
 
         const enzyme = rna.spawn()
-            .append_to(root)
+            .appendTo(root)
             .on_remove(function () { remove++ });
         root.html().should.match(/<span>plain text<\/span>/);
         attach.should.equal(1);
