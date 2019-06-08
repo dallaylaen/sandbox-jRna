@@ -48,8 +48,10 @@ describe( "ArrowSM (bind)", () => {
     });
 
     it ("binds", done => {
-        sm.bind(foo);
-        sm(42);
+        const bound = sm.bind(foo);
+        bound(42);
+        foo.x.should.equal(42);
+        sm(137);
         foo.x.should.equal(42);
         done();
     });
