@@ -32,44 +32,44 @@ and initial state of a jRna block is instantiated.
 Consider the following HTML:
 
 ```html
-    <div id="container">
-        <button class="jrna-showhide">hide</button>
-        <div class="jrna-content">
-            <!-- some other tags in here in here -->
-        </div>
+<div id="container">
+    <button class="jrna-showhide">hide</button>
+    <div class="jrna-content">
+        <!-- some other tags in here in here -->
     </div>
+</div>
 ```
 
 And the associated JS code:
 
 ```javascript
-    const toggle = new jRna();
+const toggle = new jRna();
 
-    // map element with class="jrna-content" onto property named 'content'
-    // add a second argument to set a different property name
-    toggle.element('content');
+// map element with class="jrna-content" onto property named 'content'
+// add a second argument to set a different property name
+toggle.element('content');
 
-    // changing the property 'showhide' will now
-    // trigger writing text to element with class 'jrna-showhide'
-    // again, the second argument 
-    toggle.output('showhide');
+// changing the property 'showhide' will now
+// trigger writing text to element with class 'jrna-showhide'
+// again, the second argument 
+toggle.output('showhide');
 
-    // set onclick event for element with class="showhide"
-    // that alternates between the two callbacks
-    // (switching content visibility & inscription on the button)
-    toggle.toggle('showhide', function() {
-        this.content.hide();
-        this.showhide = 'show';
-    }, function() {
-        this.content.show();
-        this.showhide = 'hide';
-    };
+// set onclick event for element with class="showhide"
+// that alternates between the two callbacks
+// (switching content visibility & inscription on the button)
+toggle.toggle('showhide', function() {
+    this.content.hide();
+    this.showhide = 'show';
+}, function() {
+    this.content.show();
+    this.showhide = 'hide';
+};
 
-    // create a concrete instance of toggle
-    // tied to the above HTML snippet
-    const mytoggle = toggle.attach('#container');
+// create a concrete instance of toggle
+// tied to the above HTML snippet
+const mytoggle = toggle.attach('#container');
 
-    // note that all of the above method calls can be chained
+// note that all of the above method calls can be chained
 ```
 
 See [examples](example/) for more.
