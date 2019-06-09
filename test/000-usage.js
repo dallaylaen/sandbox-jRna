@@ -19,6 +19,7 @@ describe( "jRna", () => {
         var rna = new jRna().def("foo", 42).args("bar");
         var enzyme = rna.attach(html(), { bar : 137 });
 
+        enzyme.should.be.an.instanceof(jRna.Bound);
         enzyme.should.have.property("foo", 42);
         enzyme.should.have.property("bar", 137);
 
