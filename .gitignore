@@ -2,3 +2,4 @@
 .nyc*
 coverage
 node_modules
+out
