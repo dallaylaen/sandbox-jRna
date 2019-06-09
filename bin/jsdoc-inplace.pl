@@ -8,54 +8,43 @@ use strict;
 use warnings;
 # TODO Getopt
 
-my %tags = (
-    chainable => sub {
-        my ($class) = $_[0] =~ /(\w+)/;
-        die "No class name in chainable"
-            unless $class;
-        return "\@returns {$class} The object itself. Chainable.";
-    },
-    oneof => sub {
-        return 'one of {@link jRna#attach attach}, {@link jRna#appendTo appendTo}, or {@link jRna#spawn spawn}'
-    },
-    jrnaid => sub {
-        return '@param {string} id - name of jrna-prefixed class to attach to.';
-    },
-    jrnaname => sub {
-        my $what = $_[0] || 'property';
-        return(
-            "\@param {string} [name] - name of created $what.",
-            "Defaults to the id param",
-        );
-    },
-);
-
-my $one_of_tags = join '|', reverse sort keys %tags;
-$one_of_tags = qr((?:$one_of_tags));
+my %known;
 
 foreach my $fname( @ARGV ) {
     open my $read, "<", $fname;
 
-    my ($tag, $indent, $params);
+    %known = ();
+    my $one_of_tags = qr/.^/; ## impossible
+    my $tag; # tag/marco being processed
+    my ($create, $indent, @names, @template);
     my @out;
     while (<$read>) {
-        # dumv sm
-        if ($tag) {
-            # skip all except @end tag
-            /\@end\s+(\w+)\s*$/ or next;
-            $1 eq $tag or die "Expected to close \@$tag, found \@end $2";
-
-            push @out, map { "$indent$_\n" }
-                "\@$tag $params", $tags{$tag}->($params), "\@end $tag";
+        # a dumb fsm
+        if (/\@end\s+(\w+)/ and $tag) {
+            die "\@end $1 found where \@end $tag expected"
+                unless $1 eq $tag;
+            $one_of_tags = add_macro( $tag, \@template, \@names)
+                if $create;
             undef $tag;
-        } elsif ( /^(.*?)\@($one_of_tags)\s*(.*)$/ ) {
+            undef $create;
+        } elsif ($tag) {
+            next unless $create;
+            push @template, s/^\Q$indent\E//r;
+        } elsif (/^(\W*)\@macro\s+(\w+\b)(.*)/) {
+            $create = 1;
             $indent = $1;
-            $tag = $2;
-            $params = $3;
+            $tag    = $2;
+            @names  = $3 =~ /(\w+)/g;
+            @template = ();
+        } elsif (/\@($one_of_tags)\s*(.*)$/) {
+            $tag = $1;
+            push @out, $_;
+            push @out, expand_macro( $1, $2 );
+            next;
         } else {
             # unchanged
-            push @out, $_;
         };
+        push @out, $_;
     };
 
     if ($tag) {
@@ -63,6 +52,46 @@ foreach my $fname( @ARGV ) {
     };
 
     replace($fname, \@out, "orig.".time);
+};
+
+sub add_macro {
+    my ($tag, $template, $params) = @_;
+
+    die "Attempt to create duplicate macro $tag"
+        if $known{$tag};
+    $known{$tag} = [ [ @$template ], [ @$params ] ];
+
+    use Data::Dumper;
+    warn "Updating known: ".Dumper(\%known);
+
+    my $upd = compile_regex( keys %known );
+    warn "Updating regex: $upd";
+    return $upd;
+};
+
+sub expand_macro {
+    my ($tag, $input) = @_;
+
+    my $todo = $known{$tag}
+        or die "Unknown macro $tag";
+
+    my ($tpl, $args) = @$todo;
+
+    my %param;
+    @param{@$args} = $input =~ /(\w+)/g;
+    # TODO count, #TODO allow strings or smth
+
+    my $rex = compile_regex( @$args );
+    
+    return map {
+        s/\$\(($rex)\)/$param{$1}/gr
+    } @$tpl;
+};
+
+sub compile_regex {
+    my $regex = join '|', map { "\Q$_\E" } reverse sort @_;
+    warn "Create regex ($regex)";
+    return qr((?:$regex));
 };
 
 sub replace {
