@@ -13,7 +13,20 @@ my %tags = (
         my ($class) = $_[0] =~ /(\w+)/;
         die "No class name in chainable"
             unless $class;
-        "\@returns {$class} The object itself. Chainable.";
+        return "\@returns {$class} The object itself. Chainable.";
+    },
+    oneof => sub {
+        return 'one of {@link jRna#attach attach}, {@link jRna#appendTo appendTo}, or {@link jRna#spawn spawn}'
+    },
+    jrnaid => sub {
+        return '@param {string} id - name of jrna-prefixed class to attach to.';
+    },
+    jrnaname => sub {
+        my $what = $_[0] || 'property';
+        return(
+            "\@param {string} [name] - name of created $what.",
+            "Defaults to the id param",
+        );
     },
 );
 
