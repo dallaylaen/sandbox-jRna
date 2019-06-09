@@ -31,15 +31,18 @@ and initial state of a jRna block is instantiated.
 
 Consider the following HTML:
 
+    ```html
     <div id="container">
         <button class="jrna-showhide">hide</button>
         <div class="jrna-content">
             <!-- some other tags in here in here -->
         </div>
     </div>
+    ```
 
 And the associated JS code:
 
+    ```javascript
     const toggle = new jRna();
 
     // map element with class="jrna-content" onto property named 'content'
@@ -67,6 +70,7 @@ And the associated JS code:
     const mytoggle = toggle.attach('#container');
 
     // note that all of the above method calls can be chained
+    ```
 
 See [examples](example/) for more.
 
