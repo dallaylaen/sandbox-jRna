@@ -36,10 +36,14 @@ foreach my $fname( @ARGV ) {
             $tag    = $2;
             @names  = $3 =~ /(\w+)/g;
             @template = ();
-        } elsif (/\@($one_of_tags)\s*(.*)$/) {
-            $tag = $1;
+        } elsif (/^(\W*)\@($one_of_tags)\s*(.*)$/) {
+            my $ind   = $1;
+               $tag   = $2;
+            my $input = $3;
+
             push @out, $_;
-            push @out, expand_macro( $1, $2 );
+            push @out, map { "$ind$_" } expand_macro( $tag, $input );
+
             next;
         } else {
             # unchanged
@@ -61,11 +65,11 @@ sub add_macro {
         if $known{$tag};
     $known{$tag} = [ [ @$template ], [ @$params ] ];
 
-    use Data::Dumper;
-    warn "Updating known: ".Dumper(\%known);
+    # use Data::Dumper;
+    # warn "Updating known: ".Dumper(\%known);
 
     my $upd = compile_regex( keys %known );
-    warn "Updating regex: $upd";
+    # warn "Updating regex: $upd";
     return $upd;
 };
 
@@ -90,7 +94,7 @@ sub expand_macro {
 
 sub compile_regex {
     my $regex = join '|', map { "\Q$_\E" } reverse sort @_;
-    warn "Create regex ($regex)";
+    # warn "Create regex ($regex)";
     return qr((?:$regex));
 };
 
