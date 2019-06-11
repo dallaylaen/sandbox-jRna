@@ -1,0 +1,47 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Chackbox handling - jRna examples</title>
+    <script lang="javascript" src="3rd-party/jquery.js"></script>
+    <script lang="javascript" src="../lib/jRna.js"></script>
+    <script lang="javascript" id="description">
+        const descr = {"title":"Chackbox handling - jRna examples"}
+    </script>
+    <script lang="javascript">
+        window.onerror = function(msg) {
+            document.getElementById("error").innerHTML += '<div>'+msg+'</div>';
+        };
+    </script>
+</head>
+<body>
+    <div id="error" style="color: red"></div>
+    <h1>Chackbox handling - jRna examples</h1>
+
+    <!-- initial node to attach to -->
+    <div id="root">
+        <input type="checkbox" class="jrna-check">
+        <span class="jrna-result">&lt;-- check the checkbox</span>
+    </div>
+
+    <!-- the script is here -->
+    <script lang="javascript" id="main">
+        "use strict";
+
+        const checkbox = new jRna()
+            .output( 'result' )
+            .element( 'check' )
+            .on( 'check', 'change', function() {
+                if (this.check.prop('checked')) {
+                    this.result = 'checked';
+                } else {
+                    this.result = 'unchecked';
+                };
+            })
+            .attach('#root');
+    </script>
+
+    <!-- describe how to use the page, if needed -->
+    <div id="usage">
+    </div>
+</body>
+</html>
