@@ -12,6 +12,12 @@
             document.getElementById("error").innerHTML += '<div>'+msg+'</div>';
         };
     </script>
+    <style>
+        .indent {
+            padding-left: 1em;
+            border-left: blue 1px solid;
+        }
+    </style>
 </head>
 <body>
     <div id="error" style="color: red"></div>
@@ -19,13 +25,11 @@
 
     <!-- initial node to attach to -->
     <div id="root">
-        <span class="jrna-output">...</span>
-        <a href="#" class="jrna-edit">edit</a>
     </div>
 
     <div id="library" style="display: none">
         <div class="task">
-            <div class="header">
+            <div class="header jrna-header">
                 <a href="#" class="jrna-toggle">[-]</a>
                 <span class="jrna-total">...</span>
                 <span class="jrna-title"></span>
@@ -33,8 +37,8 @@
                 <input type="checkbox" class="jrna-split">
                 <input size="3" class="jrna-hours hours">
             </div>
-            <div class="indent">
-                <div class="jrna-subtask">
+            <div class="indent jrna-content">
+                <div class="jrna-children">
                 </div>
                 <div>
                     <a class="jrna-add" href="#">add subtask...</a>
@@ -77,19 +81,37 @@
                 if (typeof this.callback != 'function')
                     throw "Oops, callback required";
             });
-
-        const temp = new jRna()
-            .output( 'output' )
-            .click( 'edit', function () {
-                var me = this;
-                editor.appendTo(this.container, {
-                    value: this.output,
-                    callback: function(text) {
-                        me.output = text;
-                    }
+    </script>
+    <script>
+        'use strict';
+        const node = new jRna()
+            .htmlFrom( '#library .task' )
+            .args( 'title' )
+            .output( 'title' )
+            .element( 'header' )
+            .element( 'content' )
+            .element( 'children' )
+            .click( 'edit', function() {
+                editor.appendTo( this.header, {
+                    value: this.title,
+                    callback: (text => {
+                        this.title = text;
+                    }).bind(this)
                 });
-            })
-            .attach('#root');
+            });
+
+            node.click( 'add', function () {
+                editor.appendTo( this.children, {
+                    callback: ( text => {
+                        // recurse!
+                        node.appendTo( this.children, {
+                            title: text
+                        });
+                    }).bind(this)
+                });
+            } );
+
+            node.appendTo( '#root' );
     </script>
 
     <!-- describe how to use the page, if needed -->
