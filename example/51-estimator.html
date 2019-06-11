@@ -1,0 +1,99 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>The ultimate task estimator - jRna examples</title>
+    <script lang="javascript" src="3rd-party/jquery.js"></script>
+    <script lang="javascript" src="../lib/jRna.js"></script>
+    <script lang="javascript" id="description">
+        const descr = {"title":"The ultimate task estimator - jRna examples"}
+    </script>
+    <script lang="javascript">
+        window.onerror = function(msg) {
+            document.getElementById("error").innerHTML += '<div>'+msg+'</div>';
+        };
+    </script>
+</head>
+<body>
+    <div id="error" style="color: red"></div>
+    <h1>The ultimate task estimator - jRna examples</h1>
+
+    <!-- initial node to attach to -->
+    <div id="root">
+        <span class="jrna-output">...</span>
+        <a href="#" class="jrna-edit">edit</a>
+    </div>
+
+    <div id="library" style="display: none">
+        <div class="task">
+            <div class="header">
+                <a href="#" class="jrna-toggle">[-]</a>
+                <span class="jrna-total">...</span>
+                <span class="jrna-title"></span>
+                <a href="#" class="jrna-edit">[edit]</a>
+                <input type="checkbox" class="jrna-split">
+                <input size="3" class="jrna-hours hours">
+            </div>
+            <div class="indent">
+                <div class="jrna-subtask">
+                </div>
+                <div>
+                    <a class="jrna-add" href="#">add subtask...</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="editor">
+            <input class="jrna-value">
+            <a href="#save" class="jrna-save">save</a>
+            <a href="#dismiss" class="jrna-dismiss">[x]</a>
+        </div>
+    </div>
+
+    <!-- the script is here -->
+    <script lang="javascript" id="main">
+        "use strict";
+
+        const editor = new jRna()
+            .htmlFrom('#library .editor')
+            .args( 'callback', 'value', 'size' )
+            .input( 'value' )
+            .def( 'save', function() {
+                this.callback( this.value );
+                this.remove(); 
+            })
+            .click('save', function() {
+                this.save();
+            })
+            .click('dismiss', function() {
+                this.remove();
+            })
+            .on('value', 'keypress', function(ev) {
+                if (ev.key == "Enter") {
+                    ev.preventDefault();
+                    this.save();
+                };
+            })
+            .onAttach( function () {
+                if (typeof this.callback != 'function')
+                    throw "Oops, callback required";
+            });
+
+        const temp = new jRna()
+            .output( 'output' )
+            .click( 'edit', function () {
+                var me = this;
+                editor.appendTo(this.container, {
+                    value: this.output,
+                    callback: function(text) {
+                        me.output = text;
+                    }
+                });
+            })
+            .attach('#root');
+    </script>
+
+    <!-- describe how to use the page, if needed -->
+    <div id="usage">
+    </div>
+</body>
+</html>
