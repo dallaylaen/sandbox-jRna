@@ -30,7 +30,7 @@
     <div id="library" style="display: none">
         <div class="task">
             <div class="header jrna-header">
-                <a href="#" class="jrna-toggle">[-]</a>
+                <tt><a href="#" class="jrna-toggle">[-]</a></tt>
                 <span class="jrna-total">...</span>
                 <span class="jrna-title"></span>
                 <a href="#" class="jrna-edit">[edit]</a>
@@ -98,15 +98,24 @@
                         this.title = text;
                     }).bind(this)
                 });
+            })
+            .output( 'toggle' )
+            .toggle( 'toggle', function() {
+                this.content.hide();
+                this.toggle = '[+]';
+            }, function() {
+                this.content.show();
+                this.toggle = '[-]';
             });
 
-            node.click( 'add', function () {
+            node.stickyClick( 'add', 'addLock', function () {
                 editor.appendTo( this.children, {
                     callback: ( text => {
                         // recurse!
                         node.appendTo( this.children, {
                             title: text
                         });
+                        this.addLock = false;
                     }).bind(this)
                 });
             } );
