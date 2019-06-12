@@ -265,7 +265,35 @@ describe( "jRna", () => {
         done();
     });
 
-    it( "provides onRemove and onAttach callbacks", () => {
+    it( 'provides shared lock for stickyClick', done => {
+        const root = html('<a href="#" class="jrna-a">a</a><a href="#" class="jrna-b">b</a>');
+
+        let trace = '';
+        const twoClick = new jRna()
+            .stickyClick('a', 'shared', function() { trace += 'a' })
+            .stickyClick('b', 'shared', function() { trace += 'b' })
+            .attach(root);
+
+        var aa = twoClick.element('a');
+        var ab = twoClick.element('b');
+
+        aa.click();
+        ab.click();
+
+        trace.should.equal('a');
+        twoClick.should.have.property('shared', true);
+        twoClick.shared = false;
+
+        ab.click();
+        aa.click();
+        
+        trace.should.equal('ab');
+        twoClick.should.have.property('shared', true);
+        
+        done();
+    });
+
+    it( "provides onRemove and onAttach callbacks", done => {
         const root = html('');
 
         let attach = 0;
@@ -291,6 +319,8 @@ describe( "jRna", () => {
         root.html().should.equal('');
         attach.should.equal(1);
         remove.should.equal(1);
+
+        done();
     });
 });
 
