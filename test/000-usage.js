@@ -265,7 +265,7 @@ describe( "jRna", () => {
         done();
     });
 
-    it( "provides on_remove and onAttach callbacks", () => {
+    it( "provides onRemove and onAttach callbacks", () => {
         const root = html('');
 
         let attach = 0;
@@ -282,7 +282,7 @@ describe( "jRna", () => {
 
         const enzyme = rna.spawn()
             .appendTo(root)
-            .on_remove(function () { remove++ });
+            .onRemove(function () { remove++ });
         root.html().should.match(/<span>plain text<\/span>/);
         attach.should.equal(1);
         remove.should.equal(0);
