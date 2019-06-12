@@ -17,6 +17,15 @@
             padding-left: 1em;
             border-left: blue 1px solid;
         }
+        .jrna-title {
+            font-weight: bold;
+            font-size: 110%;
+            color: green;
+        }
+        .control {
+            text-decoration: none;
+            color: grey;
+        }
     </style>
 </head>
 <body>
@@ -26,15 +35,16 @@
     <!-- initial node to attach to -->
     <div id="root">
         <a href="#download" class="jrna-download">Download</a>
+        <input type="file" class="jrna-upload">
     </div>
 
     <div id="library" style="display: none">
         <div class="task">
             <div class="header jrna-header">
-                <tt><a href="#" class="jrna-toggle">[-]</a></tt>
+                <tt><a href="#" class="control jrna-toggle">[-]</a></tt>
                 <span class="jrna-total">...</span>
                 <span class="jrna-title"></span>
-                <a href="#" class="jrna-edit">[edit]</a>
+                <a href="#" class="control jrna-edit">[edit]</a>
                 <input type="checkbox" class="jrna-split">
                 <input size="3" class="jrna-hours hours">
             </div>
@@ -42,15 +52,15 @@
                 <div class="jrna-children">
                 </div>
                 <div>
-                    <a class="jrna-add" href="#">add subtask...</a>
+                    <a class="control jrna-add" href="#">add subtask...</a>
                 </div>
             </div>
         </div>
 
         <div class="editor">
             <input class="jrna-value">
-            <a href="#save" class="jrna-save">save</a>
-            <a href="#dismiss" class="jrna-dismiss">[x]</a>
+            <a href="#save" class="control jrna-save">save</a>
+            <a href="#dismiss" class="control jrna-dismiss">[x]</a>
         </div>
     </div>
 
@@ -87,11 +97,11 @@
         'use strict';
         const node = new jRna()
             .htmlFrom( '#library .task' )
-            .args( 'title', 'parent' )
-            .init( 'children', () => new Set() )
+            .args( 'title', 'parent', 'children' )
+            .init( 'childrenSet', () => new Set() )
             .def( 'asJson', function() {
                 const children = [];
-                this.children.forEach( x => children.push( x.asJson() ) );
+                this.childrenSet.forEach( x => children.push( x.asJson() ) );
                 return {
                     title: this.title,
                     children
@@ -100,7 +110,7 @@
             .output( 'title' )
             .element( 'header' )
             .element( 'content' )
-            .element( 'children', 'box' )
+            .element( 'children', 'childrenBox' )
             .click( 'edit', function() {
                 editor.appendTo( this.header, {
                     value: this.title,
@@ -117,31 +127,50 @@
                 this.content.show();
                 this.toggle = '[-]';
             })
+            .onAttach( function() {
+                if (this.children) {
+                    for (let child of this.children)
+                        this.addChild(child);
+                };
+            })
             .onRemove( function() {
                 if (this.parent)
-                    this.parent.children.delete(this);
+                    this.parent.childrenSet.delete(this);
+            });
+
+            node.def( 'addChild', function(input) {
+                const added = node.appendTo( this.childrenBox, {
+                    parent   : this,
+                    title    : input.title,
+                    children : input.children
+                });
+                this.childrenSet.add(added);
             });
 
             node.stickyClick( 'add', 'addLock', function () {
-                editor.appendTo( this.box, {
+                editor.appendTo( this.childrenBox, {
                     callback: ( text => {
-                        // recurse!
-                        const added = node.appendTo( this.box, {
-                            parent: this,
-                            title: text
-                        });
-                        this.children.add(added);
+                        this.addChild( { title: text } );
                         this.addLock = false;
                     }).bind(this)
                 });
             } );
 
-            const root = node.appendTo( '#root' );
+            let root = node.appendTo( '#root' );
     </script>
     <script>
         'use strict';
         const manage = new jRna()
             .download('download', () => JSON.stringify( root.asJson() ) )
+            .upload( 'upload' )
+            .on( 'upload', 'change', function() {
+                this.upload( result => {
+                    console.log( 'upload triggered', result );
+                    const newroot = node.spawn(JSON.parse(result.content));
+                    root.remove();
+                    root = newroot.appendTo('#root');
+                } );
+            })
             .attach( '#root' );
     </script>
 
