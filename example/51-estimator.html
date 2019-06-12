@@ -25,6 +25,7 @@
 
     <!-- initial node to attach to -->
     <div id="root">
+        <a href="#download" class="jrna-download">Download</a>
     </div>
 
     <div id="library" style="display: none">
@@ -86,11 +87,20 @@
         'use strict';
         const node = new jRna()
             .htmlFrom( '#library .task' )
-            .args( 'title' )
+            .args( 'title', 'parent' )
+            .init( 'children', () => new Set() )
+            .def( 'asJson', function() {
+                const children = [];
+                this.children.forEach( x => children.push( x.asJson() ) );
+                return {
+                    title: this.title,
+                    children
+                };
+            })
             .output( 'title' )
             .element( 'header' )
             .element( 'content' )
-            .element( 'children' )
+            .element( 'children', 'box' )
             .click( 'edit', function() {
                 editor.appendTo( this.header, {
                     value: this.title,
@@ -106,21 +116,33 @@
             }, function() {
                 this.content.show();
                 this.toggle = '[-]';
+            })
+            .onRemove( function() {
+                if (this.parent)
+                    this.parent.children.delete(this);
             });
 
             node.stickyClick( 'add', 'addLock', function () {
-                editor.appendTo( this.children, {
+                editor.appendTo( this.box, {
                     callback: ( text => {
                         // recurse!
-                        node.appendTo( this.children, {
+                        const added = node.appendTo( this.box, {
+                            parent: this,
                             title: text
                         });
+                        this.children.add(added);
                         this.addLock = false;
                     }).bind(this)
                 });
             } );
 
-            node.appendTo( '#root' );
+            const root = node.appendTo( '#root' );
+    </script>
+    <script>
+        'use strict';
+        const manage = new jRna()
+            .download('download', () => JSON.stringify( root.asJson() ) )
+            .attach( '#root' );
     </script>
 
     <!-- describe how to use the page, if needed -->
