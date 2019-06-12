@@ -41,25 +41,25 @@
     <div id="library" style="display: none">
         <div class="task">
             <div class="header jrna-header">
-                <tt><a href="#" class="control jrna-toggle">[-]</a></tt>
-                <span class="jrna-total">...</span>
+                <a href="#" class="control jrna-toggle">[-]</a>
+                <span class="jrna-hours">...</span>
                 <span class="jrna-title"></span>
                 <a href="#" class="control jrna-edit">[edit]</a>
-                <input type="checkbox" class="jrna-split">
-                <input size="3" class="jrna-hours hours">
+                <a href="#" class="control jrna-estimate">[estimate]</a>
+                <a href="#" class="control jrna-split">[split]</a>
             </div>
             <div class="indent jrna-content">
                 <div class="jrna-children">
                 </div>
                 <div>
-                    <a class="control jrna-add" href="#">add subtask...</a>
+                    <a class="control jrna-add" href="#">[add subtask...]</a>
                 </div>
             </div>
         </div>
 
         <div class="editor">
             <input class="jrna-value">
-            <a href="#save" class="control jrna-save">save</a>
+            <a href="#save" class="control jrna-save">[save]</a>
             <a href="#dismiss" class="control jrna-dismiss">[x]</a>
         </div>
     </div>
@@ -70,10 +70,10 @@
 
         const editor = new jRna()
             .htmlFrom('#library .editor')
-            .args( 'callback', 'value', 'size' )
+            .args( 'onSave', 'onClose', 'value', 'size' )
             .input( 'value' )
             .def( 'save', function() {
-                this.callback( this.value );
+                this.onSave( this.value );
                 this.remove(); 
             })
             .click('save', function() {
@@ -89,8 +89,14 @@
                 };
             })
             .onAttach( function () {
-                if (typeof this.callback != 'function')
-                    throw "Oops, callback required";
+                if (typeof this.onSave != 'function')
+                    throw 'onSave must be a function';
+                if (this.onClose && typeof this.onClose != 'function')
+                    throw 'onClose must be a function, if present';
+            })
+            .onRemove( function() {
+                if (this.onClose)
+                    this.onClose();
             });
     </script>
     <script>
@@ -107,25 +113,56 @@
                     children
                 };
             })
+            .output( 'hours' )
             .output( 'title' )
             .element( 'header' )
             .element( 'content' )
             .element( 'children', 'childrenBox' )
-            .click( 'edit', function() {
+            .stickyClick( 'edit', 'editLock', function() {
+                const me = this;
                 editor.appendTo( this.header, {
-                    value: this.title,
-                    callback: (text => {
-                        this.title = text;
-                    }).bind(this)
+                    value: me.title,
+                    onSave: text => {
+                        me.title = text;
+                    },
+                    onClose: () => { me.editLock = false; }
                 });
             })
-            .output( 'toggle' )
+            .element( 'toggle' )
+            .output( 'toggle', 'toggleLabel' )
             .toggle( 'toggle', function() {
                 this.content.hide();
-                this.toggle = '[+]';
+                this.toggleLabel = '[+]';
             }, function() {
                 this.content.show();
-                this.toggle = '[-]';
+                this.toggleLabel = '[-]';
+            })
+            .stickyState( 'isSplit', {
+                true: function() {
+                    this.toggle.show();
+                    this.content.show();
+                },
+                false: function() {
+                    this.toggle.hide();
+                    this.content.hide();
+                }
+            })
+            .stickyClick( 'estimate', 'editLock', function() {
+                const me = this;
+                editor.appendTo( this.header, {
+                    size: 3,
+                    value: me.hours,
+                    onSave: function (nnn) {
+                        // TODO check value
+                        me.hours = nnn;
+                        me.isSplit(false);
+                    },
+                    onClose: () => { me.editLock = false; }
+                });
+            })
+            .stickyClick( 'split', 'editLock', function() {
+                this.editLock = false; // free lock immediately
+                this.isSplit(true);
             })
             .onAttach( function() {
                 if (this.children) {
@@ -147,12 +184,13 @@
                 this.childrenSet.add(added);
             });
 
-            node.stickyClick( 'add', 'addLock', function () {
+            node.stickyClick( 'add', 'editLock', function () {
+                const me = this;
                 editor.appendTo( this.childrenBox, {
-                    callback: ( text => {
-                        this.addChild( { title: text } );
-                        this.addLock = false;
-                    }).bind(this)
+                    onSave: text => {
+                        me.addChild( { title: text } );
+                    },
+                    onClose: () => { me.editLock = false; }
                 });
             } );
 
@@ -165,7 +203,6 @@
             .upload( 'upload' )
             .on( 'upload', 'change', function() {
                 this.upload( result => {
-                    console.log( 'upload triggered', result );
                     const newroot = node.spawn(JSON.parse(result.content));
                     root.remove();
                     root = newroot.appendTo('#root');
