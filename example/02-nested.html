@@ -58,7 +58,7 @@
             ed.callback = function(str) {
                 box.spawn().appendTo( me.content ).title = str;
             };
-            ed.on_remove( function() { me.editor_active = false } );
+            ed.onRemove( function() { me.editor_active = false } );
             ed.appendTo( this.content );
         });
 
