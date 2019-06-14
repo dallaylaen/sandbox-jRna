@@ -12,7 +12,7 @@ use MVC::Neaf 0.27;
 use FindBin qw($Bin);
 
 neaf static => '/js' => "$Bin/../lib";
-neaf static => '/js/3rd-party' => "$Bin/../example/3rd-party";
+neaf static => '/js/3rd-party' => "$Bin/../lib/3rd-party";
 neaf static => '/ex/' => "$Bin/../example";
 neaf static => '/lib' => "$Bin/../lib";
 
@@ -28,7 +28,7 @@ get '/' => sub {
     +{
         -view     => 'TT',
         -template => 'index.html',
-         title    => "Foo bar",
+         title    => 'jRna example runner',
          list     => \@list,
      };
 };
@@ -66,6 +66,7 @@ __DATA__
         <option value="/ex/[% item | html %]">[% item | html %]</option>
         [% END %]
     </select>
+    <button class="jrna-run">run!</button>
     <hr>
     <iframe class="jrna-iframe subpage" width="100%" height="100%">
     </iframe>
@@ -75,10 +76,13 @@ __DATA__
     const jrna = new jRna()
         .input('choose')
         .element('iframe')
-        .on('choose', 'change', function () {
+        .def( 'run',  function () {
+            if (!this.choose) return;
             this.iframe.attr('src', this.choose );
             this.iframe.onerror = window.onerror;
         })
+        .on('choose', 'change', function() { this.run() } )
+        .click('run', function() { this.run() } )
         .attach('#main');
 </script>
 </html>
