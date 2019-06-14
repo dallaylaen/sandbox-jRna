@@ -62,6 +62,7 @@
             <input class="jrna-value">
             <a href="#save" class="control jrna-save">[save]</a>
             <a href="#dismiss" class="control jrna-dismiss">[x]</a>
+            <div class="control jrna-comment"></div>
         </div>
     </div>
 
@@ -71,7 +72,8 @@
 
         const editor = new jRna()
             .htmlFrom('#library .editor')
-            .args( 'onSave', 'onClose', 'value', 'size' )
+            .args( 'onSave', 'onClose', 'value', 'size', 'comment' )
+            .output( 'comment' )
             .input( 'value' )
             .def( 'save', function() {
                 this.onSave( this.value );
@@ -94,6 +96,7 @@
                     throw 'onSave must be a function';
                 if (this.onClose && typeof this.onClose != 'function')
                     throw 'onClose must be a function, if present';
+                this.element.value.attr('size', this.size);
                 setTimeout( () => this.element.value.focus(), 0 );
             })
             .onRemove( function() {
@@ -147,7 +150,8 @@
                     onSave: text => {
                         me.title = text;
                     },
-                    onClose: () => { me.editLock = false; }
+                    onClose: () => { me.editLock = false; },
+                    comment: 'When is this done? Try to pick verifiable conditions, not actions.'
                 });
             })
             .element( 'toggle' )
