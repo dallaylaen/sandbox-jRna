@@ -34,6 +34,12 @@
             color: #FFFFFF;
             font-weight: bold;
         }
+        .done .jrna-title {
+            color: grey;
+        }
+        .done .number {
+            background-color: grey;
+        }
     </style>
 </head>
 <body>
@@ -50,6 +56,7 @@
         <div class="task">
             <div class="header jrna-header">
                 <a href="#" class="control jrna-toggle">[-]</a>
+                <input type="checkbox" class="jrna-done">
                 <span class="number jrna-display">...</span>
                 <span class="jrna-title"></span>
                 <a href="#" class="control jrna-edit">[edit]</a>
@@ -116,7 +123,7 @@
         'use strict';
         const node = new jRna()
             .htmlFrom( '#library .task' )
-            .args( 'title', 'parent', 'children', 'split', 'hours' )
+            .args( 'title', 'parent', 'children', 'split', 'hours', 'done' )
             .def( 'hours', NaN )
             .init( 'childrenSet', () => new Set() )
             .def( 'asJson', function() {
@@ -126,6 +133,7 @@
                     title: this.title,
                     hours: this.hours,
                     split: this.isSplit(),
+                    done:  this.isDone(),
                     children
                 };
             })
@@ -136,8 +144,10 @@
 
                 if (this.isSplit()) {
                     let hours = 0;
-                    this.childrenSet.forEach( item => hours += item.hours );
-                    this.hours = hours || NaN; // no children = unestimated
+                    this.childrenSet.forEach(
+                        item => { if (!item.isDone()) hours += item.hours } );
+                    // no children = unestimated
+                    this.hours = this.childrenSet.size > 0 ? hours : NaN;
                 };
 
                 this.display = Number.isNaN(this.hours)
@@ -201,10 +211,24 @@
                 this.isSplit(true);
                 this.update();
             })
+            .stickyState( 'isDone', {
+                true: function() {
+                    this.container.addClass( 'done' );
+                },
+                false: function() {
+                    this.container.removeClass( 'done' );
+                },
+            })
+            .on( 'done', 'change', function() {
+                this.isDone( this.element.done.prop('checked') );
+                if (this.parent)
+                    this.parent.update();
+            })
             .click( 'remove', function() { this.remove() })
             .onAttach( function(args) {
                 this.isSplit( !!args.split );
-                this.hours = Number(args.hours);
+                this.isDone( !!args.done );
+                this.hours = Number(args.hours) || NaN;
                 if (args.children) {
                     for (let child of args.children)
                         this.addChild(child);
