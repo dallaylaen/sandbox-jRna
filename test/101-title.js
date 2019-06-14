@@ -5,7 +5,7 @@ const should = chai.should();
 const expect = chai.expect;
 const MockXMLHttpRequest = require('mock-xmlhttprequest');
 
-const html = require( '../lib/test-mock-html.js' );
+const html = require( '../lib/test/mock-html.js' );
 
 const jRna = require( '../lib/jRna.js' );
 

@@ -4,7 +4,7 @@ const should = chai.should();
 const expect = chai.expect;
 
 // never used, except for creating in-memory nodes
-const html = require( '../lib/test-mock-html.js' );
+const html = require( '../lib/test/mock-html.js' );
 
 const jRna = require( '../lib/jRna.js' );
 

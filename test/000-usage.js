@@ -3,7 +3,7 @@ const chai = require('chai');
 const should = chai.should();
 const expect = chai.expect;
 
-const html = require( '../lib/test-mock-html.js' );
+const html = require( '../lib/test/mock-html.js' );
 
 const jRna = require( '../lib/jRna.js' );
 
