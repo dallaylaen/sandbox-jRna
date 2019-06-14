@@ -42,7 +42,7 @@
         <div class="task">
             <div class="header jrna-header">
                 <a href="#" class="control jrna-toggle">[-]</a>
-                <span class="jrna-hours">...</span>
+                <span class="jrna-display">...</span>
                 <span class="jrna-title"></span>
                 <a href="#" class="control jrna-edit">[edit]</a>
                 <a href="#" class="control jrna-estimate">[estimate]</a>
@@ -74,7 +74,7 @@
             .input( 'value' )
             .def( 'save', function() {
                 this.onSave( this.value );
-                this.remove(); 
+                this.remove();
             })
             .click('save', function() {
                 this.save();
@@ -103,17 +103,37 @@
         'use strict';
         const node = new jRna()
             .htmlFrom( '#library .task' )
-            .args( 'title', 'parent', 'children' )
+            .args( 'title', 'parent', 'children', 'split', 'hours' )
+            .def( 'hours', NaN )
             .init( 'childrenSet', () => new Set() )
             .def( 'asJson', function() {
                 const children = [];
                 this.childrenSet.forEach( x => children.push( x.asJson() ) );
                 return {
                     title: this.title,
+                    hours: this.hours,
+                    split: this.isSplit(),
                     children
                 };
             })
-            .output( 'hours' )
+            .output( 'display' )
+            .def( 'update', function(n) {
+                if (arguments.length && !this.isSplit())
+                    this.hours = Number(n);
+
+                if (this.isSplit()) {
+                    let hours = 0;
+                    this.childrenSet.forEach( item => hours += item.hours );
+                    this.hours = hours || NaN; // no children = unestimated
+                };
+
+                this.display = Number.isNaN(this.hours)
+                    ? '???'
+                    : this.hours.toFixed(2);
+
+                if (this.parent)
+                    this.parent.update();
+            })
             .output( 'title' )
             .element( 'header' )
             .element( 'content' )
@@ -151,11 +171,11 @@
                 const me = this;
                 editor.appendTo( this.header, {
                     size: 3,
-                    value: me.hours,
-                    onSave: function (nnn) {
+                    value: Number.isNaN(me.hours) ? '' : me.hours,
+                    onSave: function (hours) {
                         // TODO check value
-                        me.hours = nnn;
                         me.isSplit(false);
+                        me.update(hours);
                     },
                     onClose: () => { me.editLock = false; }
                 });
@@ -163,23 +183,28 @@
             .stickyClick( 'split', 'editLock', function() {
                 this.editLock = false; // free lock immediately
                 this.isSplit(true);
+                this.update();
             })
-            .onAttach( function() {
-                if (this.children) {
-                    for (let child of this.children)
+            .onAttach( function(args) {
+                this.isSplit( !!args.split );
+                this.hours = Number(args.hours);
+                if (args.children) {
+                    for (let child of args.children)
                         this.addChild(child);
                 };
+                this.update();
             })
             .onRemove( function() {
-                if (this.parent)
+                if (this.parent) {
                     this.parent.childrenSet.delete(this);
+                    this.parent.update();
+                };
             });
 
             node.def( 'addChild', function(input) {
                 const added = node.appendTo( this.childrenBox, {
-                    parent   : this,
-                    title    : input.title,
-                    children : input.children
+                    ...input,
+                    parent   : this
                 });
                 this.childrenSet.add(added);
             });
