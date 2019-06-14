@@ -94,6 +94,7 @@
                     throw 'onSave must be a function';
                 if (this.onClose && typeof this.onClose != 'function')
                     throw 'onClose must be a function, if present';
+                setTimeout( () => this.element.value.focus(), 0 );
             })
             .onRemove( function() {
                 if (this.onClose)
