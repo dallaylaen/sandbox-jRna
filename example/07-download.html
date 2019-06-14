@@ -13,15 +13,18 @@
 
     <!-- initial node to attach to -->
     <div id="root">
-        <a href="#download" class="jrna-download">Download</a>
+        <textarea class="jrna-input"></textarea>
+        <br>
+        <a href="#download" class="jrna-download">Save as text file</a>
     </div>
 
     <!-- the script is here -->
     <script lang="javascript" id="main">
         "use strict";
         const dl = new jRna()
-            .download( 'download', function () {
-                return 'hello world';
+            .input( 'input' )
+            .click( 'download', function () {
+                jRna.download( 'hello.txt', this.input );
             })
             .attach('#root');
     </script>
