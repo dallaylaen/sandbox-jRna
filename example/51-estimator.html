@@ -47,6 +47,7 @@
                 <a href="#" class="control jrna-edit">[edit]</a>
                 <a href="#" class="control jrna-estimate">[estimate]</a>
                 <a href="#" class="control jrna-split">[split]</a>
+                <a href="#" class="control jrna-remove">[x]</a>
             </div>
             <div class="indent jrna-content">
                 <div class="jrna-children">
@@ -161,10 +162,12 @@
                 true: function() {
                     this.toggle.show();
                     this.content.show();
+                    this.element.split.hide();
                 },
                 false: function() {
                     this.toggle.hide();
                     this.content.hide();
+                    this.element.split.show();
                 }
             })
             .stickyClick( 'estimate', 'editLock', function() {
@@ -185,6 +188,7 @@
                 this.isSplit(true);
                 this.update();
             })
+            .click( 'remove', function() { this.remove() })
             .onAttach( function(args) {
                 this.isSplit( !!args.split );
                 this.hours = Number(args.hours);
@@ -192,6 +196,8 @@
                     for (let child of args.children)
                         this.addChild(child);
                 };
+                if (!this.parent)
+                    this.element.remove.remove();
                 this.update();
             })
             .onRemove( function() {
