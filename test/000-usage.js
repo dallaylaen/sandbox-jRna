@@ -4,8 +4,16 @@ const should = chai.should();
 const expect = chai.expect;
 
 const html = require( '../lib/test/mock-html.js' );
+const $ = global.window.$;
 
 const jRna = require( '../lib/jRna.js' );
+
+describe( 'self-test', () => {
+    it ('$ should be a function', (done) => {
+        (typeof $).should.equal('function');
+        done();
+    });
+});
 
 describe( "jRna", () => {
     it("knows where it comes from", (done) => {
@@ -31,8 +39,8 @@ describe( "jRna", () => {
         var enzyme = rna.attach(html('<div class="jrna-myid">some text</div>'));
 
         enzyme.should.have.property("myid");
-        enzyme.myid.should.be.an.instanceof($);
         enzyme.myid.html().should.be.equal("some text");
+        expect( enzyme.myid ).an.instanceof($);
 
         done();
     });
@@ -61,7 +69,9 @@ describe( "jRna", () => {
     });
 
     it( "can modify document", (done) => {
-        html(''); // reset document
+        const root = html(''); // reset document
+        expect( $("body").html() ).to.equal('');
+
         const rna = new jRna()
             .html('<span class="jrna-display"></span>')
             .output('display')
@@ -72,7 +82,7 @@ describe( "jRna", () => {
             .onAttach( function() {
                 this.reset()
             });
-        var enzyme = rna.spawn( { initial: 42 } ).appendTo(html());
+        var enzyme = rna.spawn( { initial: 42 } ).appendTo(root);
 
         // now real test be here
         enzyme.should.have.property( 'display', 42 );
@@ -89,10 +99,11 @@ describe( "jRna", () => {
         $(".jrna-display").html().should.equal("&lt;i&gt;");
 
         enzyme.element.should.have.all.keys('display');
-        enzyme.element.display.should.be.an.instanceof($);
+        expect( enzyme.element.display ).to.be.an.instanceof($);
 
+        expect( $("body").html() ).to.equal('<span class="jrna-display">&lt;i&gt;</span>');
         enzyme.remove();
-        $("body").html().should.equal('');
+        expect( $("body").html() ).to.equal('');
 
         done();
     });
