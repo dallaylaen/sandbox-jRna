@@ -267,7 +267,9 @@
     <script>
         'use strict';
         const manage = new jRna()
-            .download('download', () => JSON.stringify( root.asJson() ) )
+            .click('download', function () {
+                jRna.download( 'task.json', JSON.stringify( root.asJson() ), 'application/json' )
+            })
             .upload( 'upload' )
             .on( 'upload', 'change', function() {
                 this.upload( result => {
