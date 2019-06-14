@@ -18,7 +18,7 @@ describe( 'self-test', () => {
 describe( "jRna", () => {
     it("knows where it comes from", (done) => {
         const rna = new jRna();
-        rna.origin.should.match(/usage.js:\d+(?::\d+)?$/);
+        rna.origin.should.match(/html.js:\d+(?::\d+)?$/);
 
         done();
     });
@@ -157,7 +157,7 @@ describe( "jRna", () => {
 
         expect( () => {
             rna.attach( root.find(".nothing") );
-        }).to.throw(/Cannot attach to a missing element.*jRna@.*usage.js:\d+/);
+        }).to.throw(/Cannot attach to a missing element.*jRna@.*html.js:\d+/);
 
         expect( () => {
             rna.attach( root.find( "#decoy" ) );
