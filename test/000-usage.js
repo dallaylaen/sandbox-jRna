@@ -88,8 +88,8 @@ describe( "jRna", () => {
         enzyme.display = '<i>';
         $(".jrna-display").html().should.equal("&lt;i&gt;");
 
-        enzyme.element("display").should.be.an.instanceof($);
-        should.not.exist(enzyme.element("noexist"));
+        enzyme.element.should.have.all.keys('display');
+        enzyme.element.display.should.be.an.instanceof($);
 
         enzyme.remove();
         $("body").html().should.equal('');
@@ -244,7 +244,7 @@ describe( "jRna", () => {
         const root = html('<button class="jrna-sticky">click me</button>');
         const rna  = new jRna()
             .stickyClick("sticky", "down", function () {
-                this.element("sticky").html("clicked");
+                this.element.sticky.html('clicked');
                 trace++;
             })
             .attach(root);
@@ -274,8 +274,8 @@ describe( "jRna", () => {
             .stickyClick('b', 'shared', function() { trace += 'b' })
             .attach(root);
 
-        var aa = twoClick.element('a');
-        var ab = twoClick.element('b');
+        var aa = twoClick.element.a;
+        var ab = twoClick.element.b;
 
         aa.click();
         ab.click();
