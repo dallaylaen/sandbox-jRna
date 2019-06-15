@@ -335,3 +335,32 @@ describe( "jRna", () => {
     });
 });
 
+describe( 'jRna.rawOutput', () => {
+    const rna = new jRna()
+        .html('<div class="jrna-raw"></div>')
+        .rawOutput('raw');
+
+    it( 'can modify document', done => {
+        const root = html();
+        const bound = rna.appendTo( root );
+
+        const bold = 'very <b>bold</b> text';
+
+        bound.raw = bold;
+        bound.should.have.property( 'raw', bold );
+        bound.container.html().should.equal( bold );
+
+        const italic = '<i>maybe</i>';
+
+        const bound2 = rna.appendTo( root );
+        bound2.should.have.property( 'raw', undefined );
+        bound2.raw = italic;
+
+        // check no interconnection
+        bound.should.have.property( 'raw', bold );
+        bound2.should.have.property( 'raw', italic );
+
+        done();
+    });
+})
+
