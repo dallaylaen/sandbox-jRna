@@ -74,4 +74,4 @@ const mytoggle = toggle.attach('#container');
 
 See [examples](example/) for more.
 
-
+See the [Ultimate task estimator](apps/estimator.html), too.
