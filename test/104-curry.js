@@ -22,11 +22,12 @@ describe( 'jRna.curry', () => {
         .def( 'doit', function(...args) {
             trace = [ 'm', this ].concat( args );
         })
-        .click( 'extra', function (...args) {
-             trace = [ 'f', this ].concat( args ) }, [1,2,3]
-        )
+        .click( 'extra', [
+            function (...args) { trace = [ 'f', this ].concat( args ) },
+            1,2,3
+        ])
         .on( 'method', 'click', 'doit' )
-        .stickyClick( 'both', 'lock', 'doit', [1,2,3] )
+        .stickyClick( 'both', 'lock', ['doit', 1, 2, 3] )
         .spawn();
 
     // cannot attach to html in descript
@@ -69,6 +70,17 @@ describe( 'jRna.curry', () => {
         // expect( ev ).to.have.property( 'type', 'click' );
         trace.should.deep.equal( ['m', rna, 1, 2, 3 ] );
         rna.should.have.property( 'lock', true );
+        done();
+    });
+
+    it('rejects rubbish args', done => {
+        const rna = new jRna();
+
+        expect( function() {
+            rna.click('foo', {} );
+            rna.attach( html( '<a href="#" class="jrna-foo"></a>' ) );
+        }).to.throw(/[Uu]nexpected.*callback/);
+
         done();
     });
 });
