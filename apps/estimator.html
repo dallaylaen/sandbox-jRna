@@ -94,12 +94,8 @@
                 this.onSave( this.value );
                 this.remove();
             })
-            .click('save', function() {
-                this.save();
-            })
-            .click('dismiss', function() {
-                this.remove();
-            })
+            .click('save', 'save')
+            .click('dismiss', 'remove')
             .on('value', 'keypress', function(ev) {
                 if (ev.key == "Enter") {
                     ev.preventDefault();
