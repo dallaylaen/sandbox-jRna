@@ -129,9 +129,9 @@ describe( "jRna", () => {
 
         var probe = rna.attach(root);
 
-        $(".jrna-in").click();
+        $(".jrna-in").trigger('click');
         probe.trace.should.equal(1);
-        $(".jrna-in").click();
+        $(".jrna-in").trigger('click');
         probe.trace.should.equal(2);
 
         done();
@@ -236,12 +236,12 @@ describe( "jRna", () => {
 
         const button = root.find('.jrna-switch');
 
-        button.click();
+        button.trigger('click');
         on.should.equal(1);
         off.should.equal(0);
         button.html().should.equal("turn off");
 
-        button.click();
+        button.trigger('click');
         on.should.equal(1);
         off.should.equal(1);
         button.html().should.equal("turn on");
@@ -264,13 +264,13 @@ describe( "jRna", () => {
         trace.should.equal(0);
         button.html().should.equal("click me");
 
-        button.click();
+        button.trigger('click');
         trace.should.equal(1);
         button.html().should.equal("clicked");
-        button.click();
+        button.trigger('click');
         trace.should.equal(1);
         rna.down = false;
-        button.click();
+        button.trigger('click');
         trace.should.equal(2);
 
         done();
@@ -288,15 +288,15 @@ describe( "jRna", () => {
         var aa = twoClick.element.a;
         var ab = twoClick.element.b;
 
-        aa.click();
-        ab.click();
+        aa.trigger('click');
+        ab.trigger('click');
 
         trace.should.equal('a');
         twoClick.should.have.property('shared', true);
         twoClick.shared = false;
 
-        ab.click();
-        aa.click();
+        ab.trigger('click');
+        aa.trigger('click');
         
         trace.should.equal('ab');
         twoClick.should.have.property('shared', true);

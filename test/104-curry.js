@@ -39,7 +39,7 @@ describe( 'jRna.curry', () => {
         const probe = root.find('.jrna-'+name);
         expect( probe.length ).to.equal(1);
         trace = [];
-        probe.click();
+        probe.trigger('click');
         expect( trace.length ).not.to.equal(0);
         return trace.pop();
     };
