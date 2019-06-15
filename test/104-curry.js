@@ -26,7 +26,7 @@ describe( 'jRna.curry', () => {
             function (...args) { trace = [ 'f', this ].concat( args ) },
             1,2,3
         ])
-        .on( 'method', 'click', 'doit' )
+        .on( 'click', 'method', 'doit' )
         .stickyClick( 'both', 'lock', ['doit', 1, 2, 3] )
         .spawn();
 
