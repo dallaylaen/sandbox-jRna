@@ -36,7 +36,7 @@
             .output("display")
             .element("info")
             .upload("file")
-            .on( "file", "change", function() {
+            .on( 'change', 'file', function() {
                 const me = this;
                 this.file( function(ret) {
                     me.info.html('');

@@ -96,7 +96,7 @@
             })
             .click('save', 'save')
             .click('dismiss', 'remove')
-            .on('value', 'keypress', function(ev) {
+            .on( 'keypress', 'value', function(ev) {
                 if (ev.key == "Enter") {
                     ev.preventDefault();
                     this.save();
@@ -215,7 +215,7 @@
                     this.container.removeClass( 'done' );
                 },
             })
-            .on( 'done', 'change', function() {
+            .on( 'change', 'done', function() {
                 this.isDone( this.element.done.prop('checked') );
                 if (this.parent)
                     this.parent.update();
@@ -267,7 +267,7 @@
                 jRna.download( 'task.json', JSON.stringify( root.asJson() ), 'application/json' )
             })
             .upload( 'upload' )
-            .on( 'upload', 'change', function() {
+            .on( 'change', 'upload', function() {
                 this.upload( result => {
                     const newroot = node.spawn(JSON.parse(result.content));
                     root.remove();

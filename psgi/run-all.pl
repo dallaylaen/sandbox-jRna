@@ -81,7 +81,7 @@ __DATA__
             this.iframe.attr('src', this.choose );
             this.iframe.onerror = window.onerror;
         })
-        .on('choose', 'change', function() { this.run() } )
+        .on( 'change', 'choose', function() { this.run() } )
         .click('run', function() { this.run() } )
         .attach('#main');
 </script>

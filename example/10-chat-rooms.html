@@ -75,7 +75,7 @@
                 node.selected(true);
                 return true;
             })
-            .on("newname", "keydown", function(ev) {
+            .on( 'keydown', 'newname', function(ev) {
                 if (ev.key == 'Enter') {
                     if (this.create( this.newname ))
                         this.newname = '';

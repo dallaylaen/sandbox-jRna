@@ -30,7 +30,7 @@
         const checkbox = new jRna()
             .output( 'result' )
             .element( 'check' )
-            .on( 'check', 'change', function() {
+            .on( 'change', 'check', function() {
                 if (this.check.prop('checked')) {
                     this.result = 'checked';
                 } else {

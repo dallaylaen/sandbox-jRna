@@ -100,7 +100,7 @@
         let last;
         const upload = new jRna()
             .upload('file')
-            .on('file', 'change', function() {
+            .on( 'change', 'file', function() {
                 this.file( function(raw) {
                     const obj = JSON.parse(raw.content);
                     if(last)
