@@ -61,3 +61,67 @@ describe('jRna.stickyState', () => {
     });
 });
 
+describe ('jRna.args', () => {
+    let initRan = [];
+    let stateChange = [];
+
+    const rna = new jRna()
+        .args ( 'foo', 'bar', 'quux' )
+        .init ( 'foo', function(args) { 
+            initRan = [ this, args ]; 
+            return 42; 
+        })
+        .def( 'bar', function(value) { this.value = value; } )
+        .stickyState( 'quux', {
+            true:  function () { stateChange = [ this.quux(), true ] },
+            false: function () { stateChange = [ this.quux(), false ] },
+        });
+
+    it ('forbids bogus args', done => {
+        expect( () => rna.args('element') )
+            .to.throw(/[Ff]orbidden.* arg.*element/);
+        expect( () => rna.attach( html(), { bogus: 314 } ) )
+            .to.throw(/[Uu]nknown.* arg.* bogus/);
+        done();
+    });
+
+    it ('triggers assignment', done => {
+        initRan = [];
+        stateChange = [];
+        const thing = rna.attach( html(), { foo: 137 } );
+
+        thing.should.not.have.property( 'value' );
+        thing.should.have.property( 'foo', 137 );
+        initRan.should.deep.equal( [] );
+
+        // BTW check that state switch wasn't called
+        stateChange.should.deep.equal( [] );
+
+        done(); 
+    });
+
+    it ('trigger method execution', done => {
+        initRan = [];
+        stateChange = [];
+        const thing = rna.attach( html(), { bar: 137 } );
+
+        thing.should.have.property( 'value', 137 );
+
+        // BTW check default values for 'foo' which was omitted this time
+        thing.should.have.property( 'foo', 42 );
+        initRan.should.deep.equal( [thing, { bar : 137 }] );
+
+        done(); 
+    });
+
+    it ('plays along with stickyState', done => {
+        initRan = [];
+        stateChange = [];
+        const thing = rna.attach( html(), { quux: true } );
+       
+        stateChange.should.deep.equal([undefined, true]); 
+        expect( thing.quux() ).to.equal(true);
+        done(); 
+    });
+});
+
