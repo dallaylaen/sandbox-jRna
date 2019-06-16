@@ -125,3 +125,55 @@ describe ('jRna.args', () => {
     });
 });
 
+describe ('jRna.initArray', () => {
+    const rna = new jRna()
+        .initArray( 'foo' )
+        .initArray( 'bar', [1,2,3] );
+
+    it ('provides default values', done => {
+        const it = rna.attach( html() );
+        expect( it.foo ).to.deep.equal([]);
+        expect( it.bar ).to.deep.equal([1,2,3]);
+
+        done();
+    });
+
+    it ('does not share state', done => {
+        const one = rna.attach( html() );
+        const two = rna.attach( html() );
+
+        one.foo.push( 1 );
+
+        expect( one.foo ).to.deep.equal([1]);
+        expect( two.foo ).to.deep.equal([]);
+
+        done();
+    });
+});
+
+describe ('jRna.initObject', () => {
+    const rna = new jRna()
+        .initObject( 'foo' )
+        .initObject( 'bar', { age : 37 } );
+
+    it ('provides default values', done => {
+        const it = rna.attach( html() );
+        expect( it.foo ).to.deep.equal({});
+        expect( it.bar ).to.deep.equal({ age: 37 });
+
+        done();
+    });
+
+    it ('does not share state', done => {
+        const one = rna.attach( html() );
+        const two = rna.attach( html() );
+
+        one.bar.name = 'volodymyr';
+
+        expect( one.bar ).to.deep.equal({ age: 37, name: 'volodymyr' });
+        expect( two.bar ).to.deep.equal({ age: 37 });
+
+        done();
+    });
+});
+
