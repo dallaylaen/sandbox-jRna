@@ -27,6 +27,9 @@ __DATA__
             document.getElementById("error").innerHTML += '<div>'+msg+'</div>';
         };
     </script>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+    </style>
 </head>
 <body>
     <div id="error" style="color: red"></div>
@@ -34,6 +37,10 @@ __DATA__
 
     <!-- initial node to attach to -->
     <div id="root">
+    </div>
+
+    <!-- html snippets from .htmlFrom() -->
+    <div id="library" style="display: none">
     </div>
 
     <!-- the script is here -->
