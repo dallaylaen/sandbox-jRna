@@ -22,10 +22,10 @@ const doc = {
     }
 };
 
-const saved = global.document;
+const saved = global.window;
 
 try {
-    global.document = doc;
+    global.window = { document : doc };
 
     describe( 'jRna.download', () => {
         jRna.download( 'foobar.txt', '{"foo":42}' );
@@ -49,6 +49,6 @@ try {
 } catch (e) {
     throw e;
 } finally {
-    global.document = saved;
+    global.window = saved;
 };
 
