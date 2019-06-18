@@ -7,7 +7,7 @@ const MockXMLHttpRequest = require('mock-xmlhttprequest');
 
 const html = require( '../lib/test/mock-html.js' );
 
-const jRna = require( '../lib/jRna.js' );
+const jRna = require( '../lib/jrna.js' );
 
 describe( "jRna.documentTitle", () => {
     const title = jRna.documentTitle("foo", "bar", "baz");

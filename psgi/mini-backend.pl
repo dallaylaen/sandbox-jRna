@@ -47,7 +47,7 @@ __DATA__
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>[% title %]</title>
     <script lang="javascript" src="/js/3rd-party/jquery.js">alert("no jQuery!")</script>
-    <script lang="javascript" src="/js/jRna.js"></script>
+    <script lang="javascript" src="/js/jrna.js"></script>
 </head>
 <body>
     <h1>[% title %]</h1>

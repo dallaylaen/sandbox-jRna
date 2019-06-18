@@ -5,7 +5,7 @@ const expect = chai.expect;
 
 const html = require( '../lib/test/mock-html.js' );
 
-const jRna = require( '../lib/jRna.js' );
+const jRna = require( '../lib/jrna.js' );
 
 describe( 'jRna.curry', () => {
     const snippet = [

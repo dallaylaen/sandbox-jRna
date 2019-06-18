@@ -47,7 +47,7 @@ __DATA__
         };
     </script>
     <script lang="javascript" src="/js/3rd-party/jquery.js">alert("no jQuery!")</script>
-    <script lang="javascript" src="/js/jRna.js"></script>
+    <script lang="javascript" src="/js/jrna.js"></script>
     <style>
         .subpage {
             display: block;

@@ -6,7 +6,7 @@ const expect = chai.expect;
 // never used, except for creating in-memory nodes
 const html = require( '../lib/test/mock-html.js' );
 
-const jRna = require( '../lib/jRna.js' );
+const jRna = require( '../lib/jrna.js' );
 
 describe('jRna.stickyState', () => {
     const trace = [];

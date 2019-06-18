@@ -18,7 +18,7 @@ __DATA__
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>[% title | html %]</title>
     <script lang="javascript" src="3rd-party/jquery.js"></script>
-    <script lang="javascript" src="../lib/jRna.js"></script>
+    <script lang="javascript" src="../lib/jrna.js"></script>
     <script lang="javascript" id="description">
         const descr = {"title":"[% title %]"}
     </script>

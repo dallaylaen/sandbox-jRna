@@ -5,7 +5,7 @@ A JS library built by a Perl developer based on jQuery,
 
 ## Description
 
-[jRna](lib/jRna.js) stands for *JavaScript Ribonucleic Acid*.
+[jRna](lib/jrna.js) stands for *JavaScript Ribonucleic Acid*.
 It is built upon jQuery and provides application building blocks
 that attempt to minimize the knowledge sharing between
 the code and the HTML/CSS.

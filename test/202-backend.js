@@ -5,7 +5,7 @@ const expect = chai.expect;
 
 const MockXMLHttpRequest = require('mock-xmlhttprequest');
 
-const jRna = require( '../lib/jRna.js' );
+const jRna = require( '../lib/jrna.js' );
 
 describe ('jRna.backend', () => {
     const server = MockXMLHttpRequest.newServer({

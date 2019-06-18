@@ -3,7 +3,7 @@ const chai = require('chai');
 const should = chai.should();
 const expect = chai.expect;
 
-const jRna = require( '../lib/jRna.js' );
+const jRna = require( '../lib/jrna.js' );
 
 /* mock the whole solution :( */
 const doc = {
