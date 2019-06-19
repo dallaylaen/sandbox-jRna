@@ -11,7 +11,15 @@
 
     <!-- initial node to attach to -->
     <div id="root">
-        <input type="file" class="jrna-file">
+        <div style="border: solid blue 1px">
+            Use static <tt>jRna.upload()</tt> method to get a file upload promise<br>
+            <button class="jrna-upload">Upload trigger</button>
+        </div>
+        <div style="border: solid blue 1px">
+            Use <tt>new jRna().upload()</tt> to get a file upload promise
+            from a pre-exisiting &lt;input type="file"&gt;<br>
+            <input type="file" class="jrna-file">
+        </div>
         <div class="jrna-info"></div>
         <pre class="jrna-display"></pre>
     </div>
@@ -47,6 +55,9 @@
             .on( 'change', 'file', function() {
                 this.file().then( this.showfile.bind(this) );
             })
+            .click( 'upload', function() {
+                jRna.upload().then( this.showfile.bind(this) );
+            } )
             .attach('#root');
     </script>
 
