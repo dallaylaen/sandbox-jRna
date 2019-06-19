@@ -26,7 +26,7 @@
     <script lang="javascript" id="main">
         "use strict";
 
-        const meta = new jRna()
+        const pair = new jRna()
             .htmlFrom('#library .meta')
             .output("key")
             .output("value")
@@ -36,16 +36,16 @@
             .output("display")
             .element("info")
             .upload("file")
+            .def( 'showfile', function(ret) {
+                this.info.html('');
+                pair.appendTo(this.info, {key: 'name', value: ret.name });
+                pair.appendTo(this.info, {key: 'size', value: ret.size });
+                pair.appendTo(this.info, {key: 'type', value: ret.type });
+                pair.appendTo(this.info, {key: 'last modified', value: new Date(ret.lastModified) });
+                this.display = ret.content;
+            })
             .on( 'change', 'file', function() {
-                const me = this;
-                this.file( function(ret) {
-                    me.info.html('');
-                    meta.appendTo(me.info, {key: 'name', value: ret.name });
-                    meta.appendTo(me.info, {key: 'size', value: ret.size });
-                    meta.appendTo(me.info, {key: 'type', value: ret.type });
-                    meta.appendTo(me.info, {key: 'last modified', value: new Date(ret.lastModified) });
-                    me.display = ret.content;
-                });
+                this.file().then( this.showfile.bind(this) );
             })
             .attach('#root');
     </script>
