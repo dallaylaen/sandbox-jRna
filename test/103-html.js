@@ -141,8 +141,6 @@ describe( "jRna", () => {
         var root = html('<div id="main"></div><div id="widget"><span class="jrna-label"></span></div>');
         var rna  = new jRna().output("label").htmlFrom("#widget");
 
-        rna._html.should.match(/<span class="jrna-label">/);
-
         var probe = rna.spawn().appendTo(root.find("#main"));
         probe.label = "foo bared";
 
