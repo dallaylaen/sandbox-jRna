@@ -161,7 +161,7 @@ describe( "jRna", () => {
 
         expect( () => {
             rna.attach( root.find( "#decoy" ) );
-        }).to.throw(/Cannot fulfill \.jrna-my with a missing element/);
+        }).to.throw(/.*\bjrna-my\b.*jRna@/);
 
         expect( () => {
             rna.spawn().appendTo( root.find(".nothing") );

@@ -41,6 +41,7 @@ describe( 'jRna.curry', () => {
         trace = [];
         probe.trigger('click');
         expect( trace.length ).not.to.equal(0);
+        console.log( trace );
         return trace.pop();
     };
 
