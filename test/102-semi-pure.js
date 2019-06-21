@@ -8,6 +8,21 @@ const html = require( '../lib/test/mock-html.js' );
 
 const jRna = require( '../lib/jrna.js' );
 
+describe('jRna.def', () => {
+    it ('forbids duplicate names', done => {
+        const rna = new jRna()
+            .args( 'foo' )
+            .def( 'foo', 42 );
+        expect( function() { rna.def('foo', 137) } )
+            .to.throw(/Property.*\bfoo\b/);
+
+        expect( rna.attach(html()) ).to.have.property( 'foo', 42 );
+        expect( rna.attach(html(), { foo: 137 }) ).to.have.property( 'foo', 137 );
+
+        done();
+    });
+});
+
 describe('jRna.stickyState', () => {
     const trace = [];
     const rna = new jRna()
@@ -100,7 +115,7 @@ describe ('jRna.args', () => {
         done(); 
     });
 
-    it ('trigger method execution', done => {
+    it ('triggers method execution', done => {
         initRan = [];
         stateChange = [];
         const thing = rna.attach( html(), { bar: 137 } );
