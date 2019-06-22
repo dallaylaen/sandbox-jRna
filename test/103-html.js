@@ -226,8 +226,8 @@ describe( "jRna", () => {
         let on = 0, off = 0;
 
         const box = new jRna()
-            .output( "switch", "label" )
-            .toggle( "switch",
+            .output( [ 'switch', 'label' ] )
+            .toggle( 'switch',
                 function () { this.label = 'turn off'; on++ },
                 function () { this.label = 'turn on'; off++ }
         ).attach(root);
@@ -237,12 +237,12 @@ describe( "jRna", () => {
         button.trigger('click');
         on.should.equal(1);
         off.should.equal(0);
-        button.html().should.equal("turn off");
+        button.html().should.equal('turn off');
 
         button.trigger('click');
         on.should.equal(1);
         off.should.equal(1);
-        button.html().should.equal("turn on");
+        button.html().should.equal('turn on');
 
         done();
     });

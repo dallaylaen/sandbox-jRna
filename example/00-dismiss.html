@@ -30,16 +30,16 @@
 
     // create an output method say()
     // associated with element that has class="content"
-    message.output( "content", "say" );
+    message.output( ['content', 'say'] );
 
     // create an input associated with callback
-    message.click( "dismiss", function () { this.remove() } );
+    message.click( 'dismiss', function () { this.remove() } );
 
     // create an in-memory template
     message.html('<span><span class="jrna-content"></span><a href="#" class="jrna-dismiss">[x]</a></span>');
 
     // now attach to some HTML element
-    message.spawn().appendTo('#where-message-appears').say = 'Hello!';
+    message.appendTo('#where-message-appears').say = 'Hello!';
     </script>
 
     <!-- describe how to use the page, if needed -->
