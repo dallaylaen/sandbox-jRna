@@ -88,7 +88,7 @@ sub expand_macro {
     my $rex = compile_regex( @$args );
     
     return map {
-        s/\$\(($rex)\)/$param{$1}/gr
+        s/%\(($rex)\)/$param{$1}/gr
     } @$tpl;
 };
 
