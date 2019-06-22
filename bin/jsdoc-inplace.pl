@@ -10,6 +10,11 @@ use warnings;
 
 my %known;
 
+my $re_bare = qr([\w\.]+);
+my $re_quot = qr('(?:[^']+|\\')*');
+my $re_quod = qr("(?:[^"]+|\\")*");
+my $re_parm = qr($re_bare|$re_quot|$re_quod);
+
 foreach my $fname( @ARGV ) {
     open my $read, "<", $fname;
 
@@ -82,7 +87,7 @@ sub expand_macro {
     my ($tpl, $args) = @$todo;
 
     my %param;
-    @param{@$args} = $input =~ /(\w+)/g;
+    @param{@$args} = unparam( $input, scalar @$args );
     # TODO count, #TODO allow strings or smth
 
     my $rex = compile_regex( @$args );
@@ -90,6 +95,21 @@ sub expand_macro {
     return map {
         s/%\(($rex)\)/$param{$1}/gr
     } @$tpl;
+};
+
+sub unparam {
+    my ($args, $count) = @_;
+
+    my @found = $args =~ /($re_parm)/g;
+    # TODO make sure nothing but re_parm is there
+    die "Wrong argument count (exp $count): $args"
+        if @found != $count;
+
+    return map {
+        /^["']/ 
+            ? s/^["']//r =~ s/['"]$//r =~ s/\\(.)/$1/gr
+            : $_
+    } @found;
 };
 
 sub compile_regex {
