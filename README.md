@@ -22,7 +22,7 @@ A `new jRna()` creates a *description* of a block whose methods
 are mostly mutators that return self and may thus be chained.
 
 In order for a block to become effectful, the `attach` method
-or one of its cousins, `appendTo` and `spawn`, must be called.
+or one of its cousins, `appendTo` and `instantiate`, must be called.
 
 Upon `attach`, all elements within container are resolved
 and initial state of a jRna block is instantiated.

@@ -39,7 +39,7 @@ describe('jRna.stickyState', () => {
             }
         });
     it ('provides sticky state', done => {
-        const inst = rna.spawn();
+        const inst = rna.instantiate();
 
         // initial state
         trace.should.deep.equal([]);
@@ -63,13 +63,13 @@ describe('jRna.stickyState', () => {
         inst.flag.should.equal(true);
         trace.should.deep.equal([[0, undefined, 0], [1, 0, 1]]);
 
-        const other = rna.spawn();
+        const other = rna.instantiate();
         should.not.exist( other.toggle() );
 
         done();
     });
     it ('does not mix states', done => {
-        const other = rna.spawn();
+        const other = rna.instantiate();
         should.not.exist( other.toggle() );
 
         done();

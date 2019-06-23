@@ -269,7 +269,7 @@
             .upload( 'upload' )
             .on( 'change', 'upload', function() {
                 this.upload( result => {
-                    const newroot = node.spawn(JSON.parse(result.content));
+                    const newroot = node.instantiate(JSON.parse(result.content));
                     root.remove();
                     root = newroot.appendTo('#root');
                 } );

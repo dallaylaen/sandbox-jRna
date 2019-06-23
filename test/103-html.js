@@ -55,12 +55,12 @@ describe( "jRna", () => {
             .init('bar', function() { init_times++; return 137 } )
             .args('foo', 'bar');
 
-        const noargs = rna.spawn();
+        const noargs = rna.instantiate();
         noargs.should.have.property('foo', 42);
         noargs.should.have.property('bar', 137);
         init_times.should.equal(1);
 
-        const withargs = rna.spawn({foo: 3.14, bar: 2.718});
+        const withargs = rna.instantiate({foo: 3.14, bar: 2.718});
         withargs.foo.should.equal(3.14);
         withargs.bar.should.equal(2.718);
         init_times.should.equal(1); // initializer never ran
@@ -82,7 +82,7 @@ describe( "jRna", () => {
             .onAttach( function() {
                 this.reset()
             });
-        var enzyme = rna.spawn( { initial: 42 } ).appendTo(root);
+        var enzyme = rna.instantiate( { initial: 42 } ).appendTo(root);
 
         // now real test be here
         enzyme.should.have.property( 'display', 42 );
@@ -141,7 +141,7 @@ describe( "jRna", () => {
         var root = html('<div id="main"></div><div id="widget"><span class="jrna-label"></span></div>');
         var rna  = new jRna().output("label").htmlFrom("#widget");
 
-        var probe = rna.spawn().appendTo(root.find("#main"));
+        var probe = rna.instantiate().appendTo(root.find("#main"));
         probe.label = "foo bared";
 
         root.html().should.match(/<span class="jrna-label">foo bared<\/span>/);
@@ -162,14 +162,14 @@ describe( "jRna", () => {
         }).to.throw(/.*\bjrna-my\b.*jRna@/);
 
         expect( () => {
-            rna.spawn().appendTo( root.find(".nothing") );
+            rna.instantiate().appendTo( root.find(".nothing") );
         }).to.throw("Cannot append to a missing element");
 
         expect( () => {
-            rna.spawn().appendTo( root.find(".main") );
+            rna.instantiate().appendTo( root.find(".main") );
         }).to.throw("Cannot append to an ambiguous element");
 
-        const box = rna.spawn().appendTo( root.find( "#decoy" ) );
+        const box = rna.instantiate().appendTo( root.find( "#decoy" ) );
         box.my = 'ready';
         root.html().should.match(/div.*span.*ready.*span.*div.*div.*div/);
         root.html().should.not.match(/div.*div.*div.*span.*ready.*span.*div/);
@@ -317,7 +317,7 @@ describe( "jRna", () => {
         attach.should.equal(0);
         remove.should.equal(0);
 
-        const enzyme = rna.spawn()
+        const enzyme = rna.instantiate()
             .appendTo(root)
             .onRemove(function () { remove++ });
         root.html().should.match(/<span>plain text<\/span>/);

@@ -28,7 +28,7 @@ describe( 'jRna.curry', () => {
         ])
         .on( 'click', 'method', 'doit' )
         .stickyClick( 'both', 'lock', ['doit', 1, 2, 3] )
-        .spawn();
+        .instantiate();
 
     // cannot attach to html in descript
     // and must thus use this boilerplate

@@ -66,7 +66,7 @@
             setTimeout( function() {
                 if (stop) return;
                 for( let i = 0; i<5; i++ ) {
-                    tree.spawn().appendTo( me.children );
+                    tree.instantiate().appendTo( me.children );
                 };
             }, 0);
             display.update();
@@ -80,7 +80,7 @@
             setTimeout( () => {
                 stop = true;
             }, timeout);
-            tree.spawn().appendTo(display.tree);
+            tree.instantiate().appendTo(display.tree);
         };
 
     </script>

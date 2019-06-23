@@ -54,15 +54,15 @@
         box.click("remove", function() { this.remove() } );
         box.stickyClick("create", "editor_active", function() {
             var me = this;
-            var ed = editor.spawn();
+            var ed = editor.instantiate();
             ed.callback = function(str) {
-                box.spawn().appendTo( me.content ).title = str;
+                box.instantiate().appendTo( me.content ).title = str;
             };
             ed.onRemove( function() { me.editor_active = false } );
             ed.appendTo( this.content );
         });
 
-        var initial = box.spawn().appendTo( $('#root') );
+        var initial = box.instantiate().appendTo( $('#root') );
         initial.title = 'root node';
     </script>
 
