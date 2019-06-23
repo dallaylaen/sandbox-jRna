@@ -60,7 +60,7 @@ foreach my $fname( @ARGV ) {
         die "Unclosed tag \@$tag";
     };
 
-    replace($fname, \@out, "orig.".time);
+    replace($fname, \@out, time.".orig");
 };
 
 sub add_macro {
