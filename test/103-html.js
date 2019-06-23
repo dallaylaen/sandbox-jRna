@@ -20,6 +20,21 @@ describe( "jRna", () => {
         const rna = new jRna();
         rna.origin.should.match(/html.js:\d+(?::\d+)?$/);
 
+        expect( () => rna.args('container') )
+            .to.throw(/.*jRna@.*html.js:\d+(?::\d+)?$/)
+
+        done();
+    });
+
+    it( 'validates its html', done => {
+        const rna = new jRna();
+
+        expect( () => rna.html('') ).to.throw(/.*empty.*HTML.*jRna@/);
+        expect( () => rna.html('<br><br>') ).to.throw(/.*multiple.*HTML.*jRna@/);
+        expect( () => rna.html('<inp') ).to.throw(/.*HTML.*jRna@/);
+        expect( () => rna.html('text only') ).to.throw(/.*HTML.*jRna@/);
+        expect( () => rna.html('&lt;') ).to.throw(/.*HTML.*jRna@/);
+
         done();
     });
 
