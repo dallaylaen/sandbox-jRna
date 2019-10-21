@@ -5,7 +5,7 @@
     },
     "extends": "eslint:recommended",
     "globals": {
-        "$": "readonly",
+        "window": "readonly",
         "module": "readonly"
     },
     "parserOptions": {
