@@ -6,7 +6,8 @@
     "extends": "eslint:recommended",
     "globals": {
         "window": "readonly",
-        "module": "readonly"
+        "module": "readonly",
+        "require": "readonly"
     },
     "parserOptions": {
         "ecmaVersion": 2018,

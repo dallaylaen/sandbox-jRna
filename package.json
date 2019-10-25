@@ -4,14 +4,13 @@
   "description": "Stupid framework",
   "main": "lib/jrna.js",
   "bin": {
-    "jrna": "example.js"
   },
   "directories": {
     "example": "example",
     "test": "test"
   },
   "scripts": {
-    "test": "nyc mocha"
+    "test": "nyc -x lib/test -x lib/dep -x test mocha && browserify -d -o docs/lib/jrna.js lib/jrna.js"
   },
   "repository": {
     "type": "git",
