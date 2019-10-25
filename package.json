@@ -10,7 +10,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "nyc -x lib/test -x lib/dep -x test mocha && browserify -d -o docs/lib/jrna.js lib/jrna.js"
+    "test": "nyc -x lib/test -x lib/dep -x test mocha"
   },
   "repository": {
     "type": "git",
