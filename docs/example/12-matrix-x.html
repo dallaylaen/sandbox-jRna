@@ -1,0 +1,53 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Matrix multiplication - jRna examples</title>
+    <script lang="javascript" src="3rd-party/jquery.js"></script>
+    <script lang="javascript" src="../lib/jrna.js"></script>
+    <script lang="javascript" id="description">
+        const descr = {"title":"Matrix multiplication - jRna examples"}
+    </script>
+    <script lang="javascript">
+        window.onerror = function(msg) {
+            document.getElementById("error").innerHTML += '<div>'+msg+'</div>';
+        };
+    </script>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .grid-container {
+            display: grid;
+            height: 80vmin;
+            width: 80vmin;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="error" style="color: red"></div>
+    <h1>Matrix multiplication - jRna examples</h1>
+
+    <!-- initial node to attach to -->
+    <div id="root">
+    </div>
+
+    <!-- html snippets from .htmlFrom() -->
+    <div id="library" style="display: none">
+        <div class="jrna-matrix grid-container">
+        </div>
+    </div>
+
+    <!-- the script is here -->
+    <script lang="javascript" id="main">
+        "use strict";
+
+        const matrix = new jRna()
+            .args( 'rows', 'cols', 'values' )
+            .htmlFrom( '#library .jrna-matrix' )
+            .def( 'setValues'
+    </script>
+
+    <!-- describe how to use the page, if needed -->
+    <div id="usage">
+    </div>
+</body>
+</html>
